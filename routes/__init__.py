@@ -2,10 +2,12 @@ def init_app(app):
     from .login import login_bp
     from .list import list_bp
     from .submit import submit_bp
+    from .view import view_bp
 
-    app.register_blueprint(login_bp)
-    app.register_blueprint(list_bp)
-    app.register_blueprint(submit_bp)
+    app.register_blueprint(login_bp, url_prefix='/api')
+    app.register_blueprint(list_bp, url_prefix='/api')
+    app.register_blueprint(submit_bp, url_prefix='/api')
+    app.register_blueprint(view_bp)
 
     @app.after_request
     def _(response):
