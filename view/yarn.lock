@@ -1321,6 +1321,13 @@ tdesign-icons-vue-next@^0.1.5:
   dependencies:
     "@babel/runtime" "^7.16.3"
 
+tdesign-icons-vue-next@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/tdesign-icons-vue-next/-/tdesign-icons-vue-next-0.1.6.tgz#767685e2c91763b9cfb4003046bddf3bc3e5eae4"
+  integrity sha512-cZ6lIiMFZZGynQrE1Z7ttvpU2DJa/bukVaGeuGjiyuUkRtW9Pj9qRJZ8oorlX42svn+x16RvarTfbK3H6v8brQ==
+  dependencies:
+    "@babel/runtime" "^7.16.3"
+
 tdesign-vue-next@^0.26.1:
   version "0.26.1"
   resolved "https://registry.npmmirror.com/tdesign-vue-next/-/tdesign-vue-next-0.26.1.tgz#5312f9431d1fe1a177633ea24fae515e7b725cd8"

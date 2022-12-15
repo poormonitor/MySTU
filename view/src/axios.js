@@ -1,6 +1,7 @@
+import { MessagePlugin } from "tdesign-vue-next"
+import { nextTick } from "vue";
 import axios from "axios"
 import router from "./router"
-import swal from "sweetalert"
 
 const instance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -20,16 +21,21 @@ instance.interceptors.request.use((config) => {
 instance.interceptors.response.use((response) => {
     return response
 }, (error) => {
-    sessionStorage.removeItem("access_token_mystu")
-    sessionStorage.removeItem("user_mystu")
-    if (error.response.status == 401) {
-        swal("没有登录", "您没有登录，请先登录。", "info").then(() => {
+    if (!error.response) {
+        MessagePlugin.error("网络错误，请检查网络。")
+    } else if (Math.floor(error.response.status / 100) == 4) {
+        sessionStorage.removeItem("access_token_mystu")
+        sessionStorage.removeItem("user_mystu")
+        MessagePlugin.error("您没有登录，请先登录。")
+        setTimeout(() => {
             router.push({ name: "login" })
-        })
+            nextTick()
+        }, 1000)
     } else {
-        swal("发生错误了", error.response.statusText, "error").then(() => {
-            router.push({ name: "login" })
-        })
+        MessagePlugin.error("系统错误。")
+        setTimeout(() => {
+            location.reload()
+        }, 1000)
     }
     return Promise.reject(error);
 })

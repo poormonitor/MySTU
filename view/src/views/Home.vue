@@ -2,8 +2,10 @@
 import axios from "../axios"
 import { ref, onActivated } from 'vue';
 import { isNumber } from "lodash";
+import { IconFont } from "tdesign-icons-vue-next"
 import LogModule from "../components/LogModule.vue";
 import InfoModule from "../components/InfoModule.vue";
+import Header from "../components/Header.vue"
 
 const currentClass = ref()
 const currentStudent = ref()
@@ -41,9 +43,7 @@ onActivated(() => {
 </script>
 
 <template>
-    <div class="bg-gradient-to-r from-cyan-500 to-blue-500 px-6 py-3 absolute h-14 w-full">
-        <span class="text-xl text-white font-semibold">浙江工业大学之江学院理学院学生谈话管理系统</span>
-    </div>
+    <Header />
     <div class="grid grid-cols-8 divide-x-2 pt-14 h-screen">
         <div id="classOption" class="overflow-x-hidden overflow-y-auto max-h-screen">
             <t-menu theme="light" :value="currentClass" @change="fetchStudents">
@@ -54,7 +54,9 @@ onActivated(() => {
             <t-menu theme="light" :value="currentStudent" v-if="isNumber(currentClass)" @change="switchStudent">
                 <t-menu-item v-for="stu in studentsData" :value="stu.id"> {{ stu.name }} </t-menu-item>
             </t-menu>
-            <t-skeleton theme="paragraph" class="m-4" v-else></t-skeleton>
+            <div class="m-4" v-else>
+                <t-skeleton theme="paragraph"></t-skeleton>
+            </div>
         </div>
         <div id="studentInfo" class="col-span-6">
             <div v-if="currentStudent" class="h-full">
@@ -63,15 +65,23 @@ onActivated(() => {
                     <span class="ml-4 text-sm text-gray-500">{{ currentStudent }}</span>
                 </div>
                 <t-tabs :defaultValue="1">
-                    <t-tab-panel :value="1" label="基本信息">
+                    <t-tab-panel :value="1">
+                        <template #label>
+                            <icon-font name="file-copy" class="mr-1" /> 基本信息
+                        </template>
                         <InfoModule :student="currentStudent" />
                     </t-tab-panel>
                     <t-tab-panel :value="2" label="谈话记录">
+                        <template #label>
+                            <icon-font name="usergroup" class="mr-1" /> 谈话记录
+                        </template>
                         <LogModule :student="currentStudent" />
                     </t-tab-panel>
                 </t-tabs>
             </div>
-            <t-skeleton theme="paragraph" class="m-10" v-else></t-skeleton>
+            <div class="m-10" v-else>
+                <t-skeleton theme="paragraph"></t-skeleton>
+            </div>
         </div>
     </div>
 </template>

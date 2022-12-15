@@ -1,6 +1,7 @@
 <script setup>
 import { watch, ref, shallowRef, onBeforeUnmount, reactive } from 'vue';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { IconFont } from "tdesign-icons-vue-next"
 import axios from "../axios"
 import '@wangeditor/editor/dist/css/style.css'
 
@@ -46,9 +47,9 @@ const fetchLog = (logid) => {
         currentLog.value = logid
         return
     }
-    axios.get("/log", {
+    axios.get("/record", {
         params: {
-            log: logid
+            id: logid
         }
     })
         .then((response) => {
@@ -104,7 +105,12 @@ onBeforeUnmount(() => {
     <div class="grid grid-cols-4 divide-x contentHeight">
         <div class="h-full overflow-x-hidden overflow-y-auto col-span-1" v-if="!loadingLogs">
             <t-menu theme="light" :value="currentLog" @change="fetchLog">
-                <t-menu-item value="new" @click="editMode = true"> <b>新增谈话记录</b> </t-menu-item>
+                <t-menu-item value="new" @click="editMode = true"> 
+                    <template #icon>
+                        <icon-font name="add" />
+                    </template>
+                    <b>新增谈话记录</b> 
+                </t-menu-item>
                 <t-menu-item v-for="log in logsData" :value="log.id">
                     <div class="leading-5 my-2">
                         <div class="text-xl font-bold">{{ log.title }}</div>
@@ -132,20 +138,24 @@ onBeforeUnmount(() => {
                     <div class="p-4">
                         <t-input placeholder="标题" v-model="logToSubmit.title"></t-input>
                     </div>
-                    <Toolbar :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
+                    <Toolbar :editor="editorRef" :defaultConfig="toolbarConfig" />
                     <div class="h-[30vh]">
                         <Editor class="overflow-hidden border-b" v-model="logToSubmit.content"
-                            :defaultConfig="editorConfig" :mode="mode" @onCreated="handleCreated" />
+                            :defaultConfig="editorConfig" @onCreated="handleCreated" />
                     </div>
-                    <div class="flex justify-center">
-                        <t-button @click="submitLog" class="mt-6" :loading="loadingSubmit" size="large">
+                    <div class="flex justify-center mt-6">
+                        <t-button @click="submitLog" :loading="loadingSubmit" size="large">
                             提交
                         </t-button>
                     </div>
                 </div>
             </div>
-            <t-loading class="mt-6 flex justify-center" text="加载中..." size="small" v-else-if="loadingLog"></t-loading>
-            <t-skeleton theme="paragraph" class="m-10" v-else></t-skeleton>
+            <div class="mt-6 flex justify-center" v-else-if="loadingLog">
+                <t-loading text="加载中..." size="small"></t-loading>
+            </div>
+            <div class="m-10" v-else>
+                <t-skeleton theme="paragraph"></t-skeleton>
+            </div>
         </div>
     </div>
 </template>

@@ -80,12 +80,12 @@ def getLogs():
     return jsonify(status="ok", data={"logList": logs})
 
 
-@list_bp.route("/log")
+@list_bp.route("/record")
 @jwt_required()
 def getLog():
     from models.log import Log
 
-    logid = request.args.get("log")
+    logid = request.args.get("id")
 
     logInfo = Log.query.filter_by(id=logid).first()
     logInfo = logInfo.to_dict()
