@@ -48,6 +48,7 @@ def getStudentInfo():
     sid = request.args.get("student")
     student = Student.query.filter_by(id=sid).first().to_dict()
     student["sex"] = ["男", "女"][student["sex"]]
+    student["residence"] = student["residence"].replace(",", "")
 
     return jsonify(status="ok", data={"studentInfo": student})
 
@@ -56,13 +57,15 @@ def getStudentInfo():
 @jwt_required()
 def getLogs():
     from models.log import Log
+    from models.user import User
     from models import db
 
     student = request.args.get("student")
 
     logs = (
-        db.session.query(Log.id, Log.indate, Log.user, Log.title)
-        .filter_by(student=student)
+        db.session.query(Log.id, Log.indate, User.name, Log.title)
+        .outerjoin(User, User.id == Log.user)
+        .filter(Log.student == student)
         .order_by(Log.indate.desc())
         .all()
     )

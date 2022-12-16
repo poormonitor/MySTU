@@ -1,13 +1,15 @@
 <script setup>
 import { ref } from "vue"
-import { useRouter } from "vue-router"
+import router from "../router"
+import { useUser } from "../store/user"
 import { DesktopIcon, LockOnIcon } from 'tdesign-icons-vue-next';
+import { MessagePlugin } from "tdesign-vue-next";
 import axios from "../axios"
 import sha256 from 'crypto-js/sha256'
 
+const store = useUser()
 const account = ref()
 const password = ref()
-const router = useRouter()
 const loading = ref(false)
 
 const loginRequest = () => {
@@ -17,19 +19,14 @@ const loginRequest = () => {
         passwd: sha256(password.value).toString()
     }).then((response) => {
         if (response.data.status == "ok") {
-            let access_token = response.data.data.access_token
-            sessionStorage.setItem("access_token_mystu", access_token)
-            sessionStorage.setItem("user_mystu", account.value)
+            let data = response.data.data
+            sessionStorage.setItem("access_token_mystu", data.access_token)
+            store.login(account.value, data.name, data.admin)
             loading.value = false
             router.push({ name: "home" })
         } else {
-            swal({
-                title: response.data.error.title,
-                text: response.data.error.text,
-                icon: response.data.error.icon
-            }).then(() => {
-                loading.value = false
-            })
+            MessagePlugin.error(response.data.data.msg)
+            loading.value = false
         }
     })
 }

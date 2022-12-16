@@ -44,8 +44,8 @@ const infoMap = {
     },
     "联系方式": {
         "phone": "手机",
-        "email": "邮箱",
         "qq": "QQ",
+        "email": "邮箱",
     },
     "校内信息": {
         "domitory": "寝室",
@@ -53,14 +53,17 @@ const infoMap = {
         "contact": "联系人",
     },
     "家庭情况": {
-        "domicile": "户籍所在地",
         "fcontact1": "家庭联系人1",
         "fcontact1phone": "家庭联系人1电话",
         "fcontact2": "家庭联系人2",
         "fcontact2phone": "家庭联系人2电话",
         "residence": "居住地",
+        "domicile": "户籍所在地",
     }
 }
+
+const largeItem = ["email", "residence"]
+const mediumItem = ["domicile"]
 
 const editorRef = shallowRef()
 const toolbarConfig = {
@@ -91,19 +94,22 @@ const submitMemo = () => {
 
 <template>
     <div class="overflow-y-scroll overflow-x-hidden contentHeight" v-if="!loadingData">
-        <div class="grid grid-cols-4 divide-x">
-            <div id="basicInfo" class="px-10 py-8 col-span-2 lg:col-span-3">
+        <div class="grid grid-cols-4 divide-y md:divide-x md:divide-y-0">
+            <div id="basicInfo" class="px-10 py-8 col-span-4 md:col-span-2 lg:col-span-3">
                 <div class="mb-7" v-for="k in Object.keys(infoMap)">
                     <p class="font-semibold text-xl mb-2">{{ k }}</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-x-4 gap-y-4">
-                        <div v-for="e in Object.keys(infoMap[k])" :class="{ 'md:col-span-3': e == 'residence' }">
+                        <div v-for="e in Object.keys(infoMap[k])" :class="{
+                            'md:col-span-3': largeItem.includes(e),
+                            'md:col-span-2': mediumItem.includes(e)
+                        }">
                             <p v-if="studentInfo[e]">{{ infoMap[k][e] }}</p>
                             <p class="text-lg break-words leading-tight">{{ studentInfo[e] }}</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="memo" class="col-span-2 lg:col-span-1">
+            <div id="memo" class="col-span-4 md:col-span-2 lg:col-span-1">
                 <div class="p-4 flex items-center gap-x-2">
                     <span class="font-semibold text-xl">备注</span>
                     <t-switch v-model="memoEditing" size="large">

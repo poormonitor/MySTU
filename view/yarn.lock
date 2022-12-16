@@ -1060,6 +1060,11 @@ pify@^2.3.0:
   resolved "https://registry.npmmirror.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
   integrity sha512-udgsAY+fTnvv7kI7aaxbqwWNb0AHiB0qBO89PZKPkoTmGOgdbrHDKD+0B2X4uTfJ/FT1R09r9gTsjUjNJotuog==
 
+pinia-plugin-persistedstate@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/pinia-plugin-persistedstate/-/pinia-plugin-persistedstate-3.0.1.tgz#4bd64f35617ea536f1e4ec0ff140576bd92e39a9"
+  integrity sha512-WRNWtR4v8StJqBQH+Qiz88SGnlr4wvEyh7wtA+fYEVLoIOnpZ0v4FICvUcC8eUkAIvQL3n6/Ew2yryw7okazvA==
+
 pinia@^2.0.27:
   version "2.0.27"
   resolved "https://registry.npmmirror.com/pinia/-/pinia-2.0.27.tgz#cf13a8dca2792a613c1d8bb8ef50707756e5a6ef"
@@ -1314,14 +1319,7 @@ tailwindcss@^3.2.4:
     quick-lru "^5.1.1"
     resolve "^1.22.1"
 
-tdesign-icons-vue-next@^0.1.5:
-  version "0.1.6"
-  resolved "https://registry.npmmirror.com/tdesign-icons-vue-next/-/tdesign-icons-vue-next-0.1.6.tgz#767685e2c91763b9cfb4003046bddf3bc3e5eae4"
-  integrity sha512-cZ6lIiMFZZGynQrE1Z7ttvpU2DJa/bukVaGeuGjiyuUkRtW9Pj9qRJZ8oorlX42svn+x16RvarTfbK3H6v8brQ==
-  dependencies:
-    "@babel/runtime" "^7.16.3"
-
-tdesign-icons-vue-next@^0.1.6:
+tdesign-icons-vue-next@^0.1.5, tdesign-icons-vue-next@^0.1.6:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/tdesign-icons-vue-next/-/tdesign-icons-vue-next-0.1.6.tgz#767685e2c91763b9cfb4003046bddf3bc3e5eae4"
   integrity sha512-cZ6lIiMFZZGynQrE1Z7ttvpU2DJa/bukVaGeuGjiyuUkRtW9Pj9qRJZ8oorlX42svn+x16RvarTfbK3H6v8brQ==

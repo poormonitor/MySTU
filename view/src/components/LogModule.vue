@@ -2,10 +2,12 @@
 import { watch, ref, shallowRef, onBeforeUnmount, reactive } from 'vue';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { IconFont } from "tdesign-icons-vue-next"
+import {useUser} from "../store/user"
 import axios from "../axios"
 import '@wangeditor/editor/dist/css/style.css'
 
 const props = defineProps(["student"])
+const store = useUser()
 
 const loadingLogs = ref(false)
 const loadingLog = ref(false)
@@ -66,7 +68,7 @@ const submitLog = () => {
     axios.post("/submit", {
         content: logToSubmit.content,
         title: logToSubmit.title,
-        user: sessionStorage.getItem("user_mystu"),
+        user: store.user,
         student: props.student
     }).catch(() => {
         submitResult.value = "error"
@@ -78,6 +80,7 @@ const submitLog = () => {
             fetchLogs(props.student)
             currentLog.value = response.data.data.id
             editMode.value = false
+            fetchLog(currentLog.value)
         } else {
             submitResult.value = "error"
             submitMessage.value = response.data.error.msg
@@ -102,8 +105,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="flex divide-x contentHeight">
-        <div class="flex h-full overflow-y-auto" v-if="!loadingLogs">
+    <div class="grid grid-cols-3 lg:grid-cols-5 divide-x contentHeight">
+        <div class="flex h-full overflow-x-hidden overflow-y-auto col-span-1" v-if="!loadingLogs">
             <t-menu theme="light" :value="currentLog" @change="fetchLog">
                 <t-menu-item value="new" @click="editMode = true"> 
                     <template #icon>
@@ -121,7 +124,7 @@ onBeforeUnmount(() => {
             </t-menu>
         </div>
         <t-loading class="mt-6 flex justify-center" text="加载中..." size="small" v-else></t-loading>
-        <div class="col-span-3">
+        <div class="col-span-2 lg:col-span-4">
             <div id="editArea" v-if="editMode || (currentLog && !loadingLog)" class="overflow-y-auto">
                 <div class="p-8" v-if="!editMode">
                     <p class="text-3xl font-bold"> {{ logData.title }}</p>

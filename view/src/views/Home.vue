@@ -1,7 +1,7 @@
 <script setup>
 import axios from "../axios"
 import { ref, onActivated } from 'vue';
-import { isNumber } from "lodash";
+import { isNumber, times } from "lodash";
 import { IconFont } from "tdesign-icons-vue-next"
 import LogModule from "../components/LogModule.vue";
 import InfoModule from "../components/InfoModule.vue";
@@ -20,7 +20,7 @@ const fetchClasses = () => {
         })
 }
 
-const fetchStudents = (classid) => {
+const fetchStudents = (classid, callback, ...args) => {
     axios.get("/students", {
         params: {
             class: classid
@@ -29,6 +29,8 @@ const fetchStudents = (classid) => {
         .then((response) => {
             studentsData.value = response.data.data.stuList
             currentClass.value = classid
+            if (callback)
+                callback(...args)
         })
 }
 
@@ -37,20 +39,26 @@ const switchStudent = (studentid) => {
     currentName.value = studentsData.value.find(item => item.id == studentid).name
 }
 
+const switchInfo = (cls, stu) => {
+    let clsid = classesData.value.find(item => item.name == cls).id
+    fetchStudents(clsid, switchStudent, stu)
+}
+
 onActivated(() => {
     fetchClasses()
 })
 </script>
 
 <template>
-    <Header />
-    <div class="grid grid-cols-8 divide-x-2 pt-14 h-screen">
-        <div id="classOption" class="overflow-x-hidden overflow-y-auto max-h-screen">
+    <Header @updateStu="switchInfo" />
+    <div class="grid grid-cols-6 md:grid-cols-8 divide-x-2 pt-14 h-screen">
+        <div id="classOption" class="flex overflow-x-hidden overflow-y-auto max-h-screen">
             <t-menu theme="light" :value="currentClass" @change="fetchStudents">
                 <t-menu-item v-for="cls in classesData" :value="cls.id"> {{ cls.name }} </t-menu-item>
             </t-menu>
         </div>
-        <div id="studentOption" class="overflow-x-hidden overflow-y-auto max-h-screen">
+        <div id="studentOption" class="overflow-x-hidden overflow-y-auto max-h-screen"
+            :class="{ 'flex': isNumber(currentClass) }">
             <t-menu theme="light" :value="currentStudent" v-if="isNumber(currentClass)" @change="switchStudent">
                 <t-menu-item v-for="stu in studentsData" :value="stu.id"> {{ stu.name }} </t-menu-item>
             </t-menu>
@@ -58,9 +66,9 @@ onActivated(() => {
                 <t-skeleton theme="paragraph"></t-skeleton>
             </div>
         </div>
-        <div id="studentInfo" class="col-span-6">
+        <div id="studentInfo" class="col-span-4 md:col-span-6">
             <div v-if="currentStudent" class="h-full">
-                <div id="basic" class="h-16 px-6 py-4">
+                <div id="basic" class="h-20 px-8 py-7">
                     <span class="text-3xl font-bold">{{ currentName }}</span>
                     <span class="ml-4 text-sm text-gray-500">{{ currentStudent }}</span>
                 </div>
@@ -88,7 +96,7 @@ onActivated(() => {
 
 <style>
 .contentHeight {
-    height: calc(100vh - 10.5rem)
+    height: calc(100vh - 11.5rem)
 }
 
 .t-tabs__header {
