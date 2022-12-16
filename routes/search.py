@@ -33,23 +33,29 @@ def search():
     result = result.limit(5)
     result = result.all()
 
-    def getContent(student: Student, target: str):
-        s = ""
+    def getContent(student: Student, keyword: str):
+        s, f = "", ""
         for key, value in student.to_dict().items():
             s += info[key] + ": " + str(value)
             s += "\n"
 
-        rs = re.search(r".*(%s).+" % target, s)
-        gp = rs.group(), rs.group(1)
+        for target in keyword.split(" "):
+            rs = re.search(r".*(%s).+" % target, s)
+
+            if not rs:
+                return None
+                
+            gp = rs.group(), rs.group(1)
+            f += gp[0].replace(gp[1], "<b>" + gp[1] + "</b>") + "\n"
 
         return {
             "name": student.name,
-            "content": gp[0].replace(gp[1], "<b>" + gp[1] + "</b>"),
+            "content": f,
             "id": student.id,
             "cls": student.cls,
         }
 
-    result = [getContent(i, keyword) for i in result]
+    result = [e for i in result if (e := getContent(i, keyword))]
     print(result)
 
     return jsonify(status="ok", data=result)

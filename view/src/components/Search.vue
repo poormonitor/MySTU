@@ -41,7 +41,7 @@ const gotoStudent = (cls, id) => {
             <div class="py-2 px-5 transition hover:bg-slate-200 rounded-2xl cursor-pointer select-none"
                 v-for="result in searchResult" v-if="!loading" @click="gotoStudent(result.cls, result.id)">
                 <p class="text-lg font-semibold text-black">{{ result.name }}</p>
-                <p class="text-cyan-700 mt-0.5" v-html="result.content"></p>
+                <p class="text-cyan-700 mt-0.5 whitespace-pre" v-html="result.content"></p>
             </div>
             <div class="mt-6 flex justify-center" v-else>
                 <t-loading text="加载中..." size="small"></t-loading>
