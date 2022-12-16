@@ -88,9 +88,9 @@ onMounted(() => {
         <div id="studentInfo" class="col-span-4 md:col-span-6">
             <div v-if="currentStudent" class="h-full">
                 <div id="basic" class="h-20 flex">
-                    <div id="pic" class="h-32 w-24 ml-1 p-0.5">
+                    <div id="pic" class="h-32 w-24 ml-1 p-1">
                         <t-image class="self-end" fit="cover" :src="imgItem" v-if="imgItem" />
-                        <div class="h-full w-full bg-slate-100 blur-sm" v-else></div>
+                        <div class="h-full w-full bg-slate-200 blur-sm" v-else></div>
                     </div>
                     <div class="pb-4 pl-6 flex">
                         <span class="text-3xl font-bold self-end">{{ currentName }}</span>
