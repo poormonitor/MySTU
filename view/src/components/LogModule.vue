@@ -102,8 +102,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="grid grid-cols-4 divide-x contentHeight">
-        <div class="h-full overflow-x-hidden overflow-y-auto col-span-1" v-if="!loadingLogs">
+    <div class="flex divide-x contentHeight">
+        <div class="flex h-full overflow-y-auto" v-if="!loadingLogs">
             <t-menu theme="light" :value="currentLog" @change="fetchLog">
                 <t-menu-item value="new" @click="editMode = true"> 
                     <template #icon>
