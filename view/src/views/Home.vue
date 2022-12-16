@@ -12,6 +12,7 @@ const currentStudent = ref()
 const currentName = ref()
 const classesData = ref()
 const studentsData = ref()
+const imgItem = ref(false)
 const SearchVisible = ref(false)
 
 const fetchClasses = () => {
@@ -35,10 +36,27 @@ const fetchStudents = (classid, callback, ...args) => {
         })
 }
 
+const fetchStudentPic = () => {
+    axios.get("/pic", {
+        params: {
+            id: currentStudent.value
+        }
+    }).then((response) => {
+        if (response.data.status == "ok") {
+            let data = response.data.data
+            setTimeout(() => {
+                imgItem.value = "data:image/" + data.format + ";base64, " + data.pic
+            }, 100)
+        }
+    })
+}
+
 const switchStudent = (studentid) => {
+    imgItem.value = false
     currentStudent.value = studentid
     currentName.value = studentsData.value.find(item => item.id == studentid).name
     SearchVisible.value = false
+    fetchStudentPic()
 }
 
 const switchInfo = (cls, stu) => {
@@ -69,9 +87,15 @@ onMounted(() => {
         </div>
         <div id="studentInfo" class="col-span-4 md:col-span-6">
             <div v-if="currentStudent" class="h-full">
-                <div id="basic" class="h-20 px-8 py-7">
-                    <span class="text-3xl font-bold">{{ currentName }}</span>
-                    <span class="ml-4 text-sm text-gray-500">{{ currentStudent }}</span>
+                <div id="basic" class="h-20 flex">
+                    <div id="pic" class="h-32 w-24 ml-1 p-0.5">
+                        <t-image class="self-end" fit="cover" :src="imgItem" v-if="imgItem" />
+                        <div class="h-full w-full bg-slate-100 blur-sm" v-else></div>
+                    </div>
+                    <div class="pb-4 pl-6 flex">
+                        <span class="text-3xl font-bold self-end">{{ currentName }}</span>
+                        <span class="pl-4 text-sm text-gray-500 self-end">{{ currentStudent }}</span>
+                    </div>
                 </div>
                 <t-tabs :defaultValue="1">
                     <t-tab-panel :value="1">
@@ -102,6 +126,10 @@ onMounted(() => {
 </template>
 
 <style>
+.t-tabs__nav-container {
+    margin-left: 7rem;
+}
+
 .contentHeight {
     height: calc(100vh - 11.5rem)
 }

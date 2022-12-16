@@ -93,9 +93,9 @@ const submitMemo = () => {
 </script>
 
 <template>
-    <div class="overflow-y-scroll overflow-x-hidden contentHeight" v-if="!loadingData">
-        <div class="grid grid-cols-4 divide-y md:divide-x md:divide-y-0">
-            <div id="basicInfo" class="px-10 py-8 col-span-4 md:col-span-2 lg:col-span-3">
+    <div class="overflow-hidden contentHeight" v-if="!loadingData">
+        <div class="grid grid-cols-5 lg:grid-cols-4 divide-y md:divide-x md:divide-y-0">
+            <div id="basicInfo" class="px-10 py-8 col-span-5 md:col-span-3 infoTab overflow-y-auto">
                 <div class="mb-7" v-for="k in Object.keys(infoMap)">
                     <p class="font-semibold text-xl mb-2">{{ k }}</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-x-4 gap-y-4">
@@ -109,7 +109,7 @@ const submitMemo = () => {
                     </div>
                 </div>
             </div>
-            <div id="memo" class="col-span-4 md:col-span-2 lg:col-span-1">
+            <div id="memo" class="col-span-5 md:col-span-2 lg:col-span-1 infoTab overflow-y-auto">
                 <div class="p-4 flex items-center gap-x-2">
                     <span class="font-semibold text-xl">备注</span>
                     <t-switch v-model="memoEditing" size="large">
@@ -128,7 +128,7 @@ const submitMemo = () => {
                         </t-button>
                     </div>
                 </div>
-                <div class="px-4" v-else v-html="memoContent"></div>
+                <div class="px-4 pb-6" v-else v-html="memoContent"></div>
             </div>
         </div>
     </div>
@@ -136,3 +136,11 @@ const submitMemo = () => {
         <t-loading text="加载中..." size="small"></t-loading>
     </div>
 </template>
+
+<style>
+@media (min-width: 768px) {
+    .infoTab {
+        height: calc(100vh - 11.5rem)
+    }
+}
+</style>

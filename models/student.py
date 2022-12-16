@@ -12,6 +12,8 @@ class Student(db.Model):
     domicile = db.Column(db.String(8))
     party = db.Column(db.String(8))
     religion = db.Column(db.String(8))
+    identity = db.Column(db.String(24))		
+    bank = db.Column(db.String(16))
     domitory = db.Column(db.String(32), index=True)
     bed = db.Column(db.String(8))
     qq = db.Column(db.String(16))

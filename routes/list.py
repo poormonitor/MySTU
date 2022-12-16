@@ -95,3 +95,18 @@ def getLog():
     logInfo["indate"] = logInfo["indate"].strftime("%Y-%m-%d %H:%M:%S")
 
     return jsonify(status="ok", data={"logInfo": logInfo})
+
+
+@list_bp.route("/pic")
+@jwt_required()
+def getPic():
+    from base64 import b64encode
+
+    sid = request.args.get("id")
+    try:
+        with open("uploads/pic/" + sid + ".jpg", "rb") as fp:
+            content = fp.read()
+    except FileNotFoundError:
+        return jsonify(status="error")
+
+    return jsonify(status="ok", data={"format": "jpeg", "pic": b64encode(content).decode()})
