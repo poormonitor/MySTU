@@ -2,12 +2,10 @@
 import { watch, ref, shallowRef, onBeforeUnmount, reactive } from 'vue';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { IconFont } from "tdesign-icons-vue-next"
-import {useUser} from "../store/user"
 import axios from "../axios"
 import '@wangeditor/editor/dist/css/style.css'
 
 const props = defineProps(["student"])
-const store = useUser()
 
 const loadingLogs = ref(false)
 const loadingLog = ref(false)
@@ -68,7 +66,7 @@ const submitLog = () => {
     axios.post("/submit", {
         content: logToSubmit.content,
         title: logToSubmit.title,
-        user: store.user,
+        user: sessionStorage.getItem("user_mystu"),
         student: props.student
     }).catch(() => {
         submitResult.value = "error"
@@ -108,11 +106,11 @@ onBeforeUnmount(() => {
     <div class="grid grid-cols-3 lg:grid-cols-5 divide-x contentHeight">
         <div class="flex h-full overflow-x-hidden overflow-y-auto col-span-1" v-if="!loadingLogs">
             <t-menu theme="light" :value="currentLog" @change="fetchLog">
-                <t-menu-item value="new" @click="editMode = true"> 
+                <t-menu-item value="new" @click="editMode = true">
                     <template #icon>
                         <icon-font name="add" />
                     </template>
-                    <b>新增谈话记录</b> 
+                    <b>新增谈话记录</b>
                 </t-menu-item>
                 <t-menu-item v-for="log in logsData" :value="log.id">
                     <div class="leading-5 my-2">

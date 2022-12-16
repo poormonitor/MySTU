@@ -1,7 +1,7 @@
 {
   "name": "mystu-view",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,8 +14,6 @@
     "autoprefixer": "^10.4.13",
     "axios": "^1.2.1",
     "crypto-js": "^4.1.1",
-    "pinia": "^2.0.27",
-    "pinia-plugin-persistedstate": "^3.0.1",
     "postcss": "^8.4.19",
     "sweetalert": "^2.1.2",
     "tailwindcss": "^3.2.4",

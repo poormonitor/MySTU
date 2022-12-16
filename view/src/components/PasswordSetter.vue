@@ -54,7 +54,7 @@ const submitRequest = () => {
         new: sha256(passwdSet.new).toString()
     }).then((response) => {
         if (response.data.status == "ok") {
-            visible = false
+            visible.value = false
             MessagePlugin.success("密码设置成功")
         } else if (response.data.status == "error") {
             MessagePlugin.error("原密码错误，请检查")

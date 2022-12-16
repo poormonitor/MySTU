@@ -1,17 +1,18 @@
 <script setup>
-import axios from "../axios"
-import { ref, onActivated } from 'vue';
-import { isNumber, times } from "lodash";
+import { ref, onMounted } from 'vue';
+import { isNumber } from "lodash";
 import { IconFont } from "tdesign-icons-vue-next"
 import LogModule from "../components/LogModule.vue";
 import InfoModule from "../components/InfoModule.vue";
-import Header from "../components/Header.vue"
+import Search from "../components/Search.vue"
+import axios from "../axios"
 
 const currentClass = ref()
 const currentStudent = ref()
 const currentName = ref()
 const classesData = ref()
 const studentsData = ref()
+const SearchVisible = ref(false)
 
 const fetchClasses = () => {
     axios.get("/classes")
@@ -37,6 +38,7 @@ const fetchStudents = (classid, callback, ...args) => {
 const switchStudent = (studentid) => {
     currentStudent.value = studentid
     currentName.value = studentsData.value.find(item => item.id == studentid).name
+    SearchVisible.value = false
 }
 
 const switchInfo = (cls, stu) => {
@@ -44,21 +46,20 @@ const switchInfo = (cls, stu) => {
     fetchStudents(clsid, switchStudent, stu)
 }
 
-onActivated(() => {
+onMounted(() => {
     fetchClasses()
 })
 </script>
 
 <template>
-    <Header @updateStu="switchInfo" />
-    <div class="grid grid-cols-6 md:grid-cols-8 divide-x-2 pt-14 h-screen">
-        <div id="classOption" class="flex overflow-x-hidden overflow-y-auto max-h-screen">
+    <div class="grid grid-cols-6 md:grid-cols-8 divide-x-2 h-full">
+        <Search v-model:visible="SearchVisible" @updateInfo="switchInfo" @confirm="SearchVisible = false" />
+        <div id="classOption" class="flex overflow-x-hidden overflow-y-auto">
             <t-menu theme="light" :value="currentClass" @change="fetchStudents">
                 <t-menu-item v-for="cls in classesData" :value="cls.id"> {{ cls.name }} </t-menu-item>
             </t-menu>
         </div>
-        <div id="studentOption" class="overflow-x-hidden overflow-y-auto max-h-screen"
-            :class="{ 'flex': isNumber(currentClass) }">
+        <div id="studentOption" class="overflow-x-hidden overflow-y-auto" :class="{ 'flex': isNumber(currentClass) }">
             <t-menu theme="light" :value="currentStudent" v-if="isNumber(currentClass)" @change="switchStudent">
                 <t-menu-item v-for="stu in studentsData" :value="stu.id"> {{ stu.name }} </t-menu-item>
             </t-menu>
@@ -89,6 +90,12 @@ onActivated(() => {
             </div>
             <div class="m-10" v-else>
                 <t-skeleton theme="paragraph"></t-skeleton>
+            </div>
+        </div>
+        <div class="z-10 cursor-pointer transition bg-whtie hover:bg-slate-100 shadow-lg hover:shadow-xl rounded-full absolute bottom-3 left-3 p-4 text-black"
+            @click="SearchVisible = true">
+            <div class="w-5 h-5 flex justify-items-center items-center">
+                <icon-font class="text-black" size="large" name="search"></icon-font>
             </div>
         </div>
     </div>

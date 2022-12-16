@@ -1,13 +1,12 @@
 <script setup>
 import { ref } from "vue"
-import router from "../router"
-import { useUser } from "../store/user"
+import { useRouter } from "vue-router";
 import { DesktopIcon, LockOnIcon } from 'tdesign-icons-vue-next';
 import { MessagePlugin } from "tdesign-vue-next";
 import axios from "../axios"
 import sha256 from 'crypto-js/sha256'
 
-const store = useUser()
+const router = useRouter()
 const account = ref()
 const password = ref()
 const loading = ref(false)
@@ -21,7 +20,9 @@ const loginRequest = () => {
         if (response.data.status == "ok") {
             let data = response.data.data
             sessionStorage.setItem("access_token_mystu", data.access_token)
-            store.login(account.value, data.name, data.admin)
+            sessionStorage.setItem("user_mystu", account.value)
+            sessionStorage.setItem("name_mystu", data.name)
+            sessionStorage.setItem("admin_mystu", data.admin)
             loading.value = false
             router.push({ name: "home" })
         } else {

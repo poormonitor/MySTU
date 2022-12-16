@@ -1,9 +1,8 @@
 import { MessagePlugin } from "tdesign-vue-next"
+import { logOut } from "./func"
 import axios from "axios"
 import router from "./router"
-import { useUser } from "./store/user"
 
-const store = useUser()
 
 const instance = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -26,8 +25,7 @@ instance.interceptors.response.use((response) => {
     if (!error.response) {
         MessagePlugin.error("网络错误，请检查网络。")
     } else if (Math.floor(error.response.status / 100) == 4) {
-        sessionStorage.removeItem("access_token_mystu")
-        store.$reset()
+        logOut()
         MessagePlugin.error("您没有登录，请先登录。")
         setTimeout(() => {
             router.push({ name: "login" })

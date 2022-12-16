@@ -6,9 +6,8 @@ const mngtPath = [
 </script>
 
 <template>
-    <Header />
-    <div class="pt-14 h-screen">
-        <div id="adminNavi" class="flex overflow-x-hidden overflow-y-auto max-h-screen">
+    <div class="h-full">
+        <div id="adminNavi" class="flex overflow-x-hidden overflow-y-auto">
             <t-menu theme="light">
                 <t-menu-item :to="path.to" v-for="path in mngtPath">
                     {{ path.text }}
@@ -19,4 +18,5 @@ const mngtPath = [
             </t-menu>
         </div>
     </div>
+    <router-view></router-view>
 </template>
