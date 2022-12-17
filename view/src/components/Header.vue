@@ -18,13 +18,13 @@ const changePassword = () => {
     passwdChangerVisible.value = true
 }
 
-const options = [
+let options = [
     { content: "后台管理", "prefix-icon": () => h(IconFont, { name: "control-platform" }), value: 3, click: () => { router.push({ name: "userAdmin" }) } },
     { content: "修改密码", "prefix-icon": () => h(IconFont, { name: "lock-on" }), value: 1, click: changePassword },
     { content: "退出登录", "prefix-icon": () => h(IconFont, { name: "logout" }), value: 2, click: logOutFunc },
 ];
 
-if (!sessionStorage.getItem("admin_mystu")) {
+if (!JSON.parse(sessionStorage.getItem("admin_mystu"))) {
     options.shift()
 }
 

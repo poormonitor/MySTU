@@ -20,6 +20,7 @@ const routes = [
                 path: 'admin',
                 name: "admin",
                 component: () => import("./views/Admin.vue"),
+                redirect: { name: "userAdmin" },
                 meta: {
                     title: "后台管理",
                     requiresAuth: true,
@@ -30,6 +31,11 @@ const routes = [
                         name: "userAdmin",
                         path: "user",
                         component: () => import("./components/UserMgmt.vue")
+                    },
+                    {
+                        name: "uploadExcel",
+                        path: "upload",
+                        component: () => import("./components/UploadExcel.vue")
                     }
                 ]
             }
@@ -55,7 +61,7 @@ router.beforeEach((to, from) => {
         document.title = to.meta.title;
     }
     let token = sessionStorage.getItem('access_token_mystu')
-    let admin = sessionStorage.getItem('admin_mystu')
+    let admin = JSON.parse(sessionStorage.getItem('admin_mystu'))
     if ((!to.meta.requiresAuth && token) || (to.meta.requireAdmin && !admin)) {
         return {
             path: "/"

@@ -46,7 +46,7 @@ const rules = {
 }
 
 const submitRequest = () => {
-    if (!validatePasswd(passwdSet.new) || !validateRepeat(passwdSet.repeat)) {
+    if (!validatePasswd(passwdSet.new).result || !validateRepeat(passwdSet.repeat).result) {
         return
     }
     axios.post("/passwd", {
@@ -65,7 +65,7 @@ const submitRequest = () => {
 </script>
 
 <template>
-    <t-dialog v-model="visible" header="密码修改" :confirm-on-enter="true" :on-confirm="submitRequest">
+    <t-dialog v-model:visible="visible" header="密码修改" :confirm-on-enter="true" :on-confirm="submitRequest">
         <t-form :rules="rules" :data="passwdSet">
             <div class="m-8">
                 <t-form-item label="原密码" name="old">

@@ -48,7 +48,6 @@ def getStudentInfo():
     sid = request.args.get("student")
     student = Student.query.filter_by(id=sid).first().to_dict()
     student["sex"] = ["男", "女"][student["sex"]]
-    student["residence"] = student["residence"].replace(",", "")
 
     return jsonify(status="ok", data={"studentInfo": student})
 

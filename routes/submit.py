@@ -32,3 +32,19 @@ def submitMemo():
     db.session.commit()
 
     return jsonify(status="ok")
+
+
+@submit_bp.route("/edit", methods=["POST"])
+@jwt_required()
+def editStudent():
+    from models.student import Student
+    from models import db
+
+    info = request.get_json()
+
+    student = Student.query.filter_by(id=info["id"]).first()
+    for i in info.keys():
+        setattr(student, i, info[i])
+    db.session.commit()
+
+    return jsonify(status="ok")
