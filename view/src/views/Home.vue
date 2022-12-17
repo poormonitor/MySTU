@@ -75,7 +75,6 @@ const updateCls = (cls) => {
     fetchClasses(() => {
         let clsid = classesData.value.find(item => item.name == cls).id
         fetchStudents(clsid)
-        studentRenderKey.value++
     })
 }
 
@@ -87,16 +86,22 @@ onMounted(() => {
 <template>
     <div class="grid grid-cols-6 md:grid-cols-8 divide-x-2 h-full">
         <Search v-model:visible="SearchVisible" @updateInfo="switchInfo" @confirm="SearchVisible = false" />
-        <EditStudent v-model="userEditVisible" :student="currentStudent" @afterEdit="updateCls"
-            v-if="userEditVisible" />
+        <EditStudent v-model="userEditVisible" :student="currentStudent" @after="updateCls"
+            @refresh="studentRenderKey++" v-if="userEditVisible" />
         <div id="classOption" class="flex overflow-x-hidden overflow-y-auto">
             <t-menu theme="light" :value="currentClass" @change="fetchStudents">
-                <t-menu-item v-for="cls in classesData" :value="cls.id"> {{ cls.name }} </t-menu-item>
+                <t-menu-item v-for="cls in classesData" :value="cls.id">
+                    <span> {{ cls.name }} </span>
+                    <icon-font name="caret-left-small" class="text-red-600 text-lg" v-if="cls.alert" />
+                </t-menu-item>
             </t-menu>
         </div>
         <div id="studentOption" class="overflow-x-hidden overflow-y-auto" :class="{ 'flex': isNumber(currentClass) }">
             <t-menu theme="light" :value="currentStudent" v-if="isNumber(currentClass)" @change="switchStudent">
-                <t-menu-item v-for="stu in studentsData" :value="stu.id"> {{ stu.name }} </t-menu-item>
+                <t-menu-item v-for="stu in studentsData" :value="stu.id">
+                    <span> {{ stu.name }} </span>
+                    <icon-font name="caret-left-small" class="text-red-600 text-lg" v-if="stu.alert" />
+                </t-menu-item>
             </t-menu>
             <div class="m-4" v-else>
                 <t-skeleton theme="paragraph"></t-skeleton>

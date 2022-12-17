@@ -7,11 +7,28 @@ list_bp = Blueprint("list", __name__)
 @list_bp.route("/classes")
 @jwt_required()
 def getClasses():
+    from datetime import timedelta, datetime
     from models.student import Student
+    from models.log import Log
     from models import db
 
     clsList = db.session.query(Student.cls).distinct().order_by(Student.cls.asc()).all()
-    clsList = [{"id": i, "name": clsList[i][0]} for i in range(len(clsList))]
+    logCnt = (
+        db.session.query(Student.cls, db.func.count(Log.id))
+        .outerjoin(Student, Student.id == Log.student)
+        .group_by(Student.cls)
+        .filter(Log.indate >= datetime.now() - timedelta(days=3))
+        .all()
+    )
+    logCnt = {k: v for k, v in logCnt}
+    clsList = [
+        {
+            "id": i,
+            "name": clsList[i][0],
+            "alert": logCnt[clsList[i][0]] > 0 if clsList[i][0] in logCnt else False,
+        }
+        for i in range(len(clsList))
+    ]
 
     return jsonify(status="ok", data={"clsList": clsList})
 
@@ -19,6 +36,8 @@ def getClasses():
 @list_bp.route("/students")
 @jwt_required()
 def getStudents():
+    from datetime import timedelta, datetime
+    from models.log import Log
     from models.student import Student
     from models import db
 
@@ -35,7 +54,24 @@ def getStudents():
         .order_by(Student.name.asc())
         .all()
     )
-    stuList = [{"id": i[0], "name": i[1]} for i in stuList]
+    logCnt = (
+        db.session.query(Student.id, db.func.count(Log.id))
+        .outerjoin(Student, Student.id == Log.student)
+        .group_by(Student.id)
+        .filter(Student.cls == clsName)
+        .filter(Log.indate >= datetime.now() - timedelta(days=3))
+        .all()
+    )
+    logCnt = {k: v for k, v in logCnt}
+
+    stuList = [
+        {
+            "id": i[0],
+            "name": i[1],
+            "alert": logCnt[i[0]] > 0 if i[0] in logCnt else False,
+        }
+        for i in stuList
+    ]
 
     return jsonify(status="ok", data={"stuList": stuList})
 
@@ -108,4 +144,6 @@ def getPic():
     except FileNotFoundError:
         return jsonify(status="error")
 
-    return jsonify(status="ok", data={"format": "jpeg", "pic": b64encode(content).decode()})
+    return jsonify(
+        status="ok", data={"format": "jpeg", "pic": b64encode(content).decode()}
+    )

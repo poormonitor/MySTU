@@ -4,7 +4,7 @@ import { MessagePlugin } from 'tdesign-vue-next';
 import axios from "../axios"
 
 const props = defineProps(["modelValue", "student"])
-const emit = defineEmits(["update:modelValue", "afterEdit"])
+const emit = defineEmits(["update:modelValue", "after", "refresh"])
 const studentInfo = reactive({ data: null })
 const originCls = ref(null)
 const visible = computed({
@@ -57,8 +57,9 @@ const submitRequest = () => {
             visible.value = false
             MessagePlugin.success("用户编辑成功。")
             if (studentInfo.data.cls != originCls.value) {
-                emit("afterEdit", studentInfo.data.cls)
+                emit("after", studentInfo.data.cls)
             }
+            emit("refresh")
         } else {
             MessagePlugin.error(response.data.data.msg)
         }
