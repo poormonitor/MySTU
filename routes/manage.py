@@ -111,7 +111,7 @@ def newUser():
 @admin_required
 def deleteUser():
     data = request.get_json()
-    uid, passwd, name, admin = data["id"]
+    uid = data["id"]
 
     user = User.query.filter_by(id=uid).first()
 

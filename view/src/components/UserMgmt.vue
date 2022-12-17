@@ -101,7 +101,7 @@ const deleteUser = (id) => {
         id: id
     }).then((response) => {
         if (response.data.status == "ok") {
-            data.value.filter(item => item.id != id)
+            data.value = data.value.filter(item => item.id != id)
             MessagePlugin.success("删除成功。")
         }
     })
