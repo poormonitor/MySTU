@@ -1,10 +1,11 @@
 <script setup>
-import { reactive, computed } from "vue"
+import { ref, computed, watch } from "vue"
 import { MessagePlugin } from 'tdesign-vue-next';
 import { IconFont } from 'tdesign-icons-vue-next';
 import axios from "../axios"
 import sha256 from "crypto-js/sha256";
 
+const form = ref()
 const props = defineProps(["modelValue", "user"])
 const emit = defineEmits(["update:modelValue", "submit"])
 const visible = computed({
@@ -16,12 +17,11 @@ const visible = computed({
     }
 })
 
-const newUser = reactive({
-    passwd: "",
-    id: "",
-    name: "",
-    admin: false
+watch(visible, () => {
+    form.value.clearValidate()
 })
+
+const newUser = ref({ passwd: "", id: "", name: "", admin: false })
 
 const validatePasswd = (val) => {
     if (/^(?=.*[0-9])(?=.*[a-zA-Z])[0-9A-Za-z~!@#$%^&*._?]{8,32}$/.test(val)) {
@@ -50,18 +50,19 @@ const rules = {
 }
 
 const submitRequest = () => {
-    if (!validatePasswd(newUser.passwd).result) {
+    if (!validatePasswd(newUser.value.passwd).result) {
         return
     }
     axios.post("/admin/new", {
-        passwd: sha256(newUser.passwd).toString(),
-        user: newUser.user,
-        admin: newUser.admin,
-        id: newUser.id
+        passwd: sha256(newUser.value.passwd).toString(),
+        user: newUser.value.user,
+        admin: newUser.value.admin,
+        id: newUser.value.id
     }).then((response) => {
         if (response.data.status == "ok") {
             visible.value = false
-            emit("submit", newUser.id, newUser.user, newUser.admin)
+            emit("submit", newUser.value.id, newUser.value.user, newUser.value.admin)
+            newUser.value = { passwd: "", id: "", name: "", admin: false }
             MessagePlugin.success("用户添加成功。")
         } else {
             MessagePlugin.error(response.data.data.msg)
@@ -73,7 +74,7 @@ const submitRequest = () => {
 
 <template>
     <t-dialog v-model:visible="visible" header="用户添加" :confirm-on-enter="true" :on-confirm="submitRequest">
-        <t-form :rules="rules" :data="newUser">
+        <t-form :rules="rules" :data="newUser" ref="form">
             <div class="m-8">
                 <t-form-item label="用户名" name="id">
                     <t-input placeholder="用户名" v-model="newUser.id" type="text" autocomplete="username">
