@@ -109,7 +109,7 @@ const submitMemo = () => {
                     </div>
                 </div>
             </div>
-            <div id="memo" class="col-span-5 md:col-span-2 lg:col-span-1 infoTab overflow-y-auto">
+            <div id="memo" class="col-span-5 md:col-span-2 lg:col-span-1 infoTab overflow-x-hidden">
                 <div class="p-4 flex items-center gap-x-2">
                     <span class="font-semibold text-xl">备注</span>
                     <t-switch v-model="memoEditing" size="large">
@@ -128,7 +128,7 @@ const submitMemo = () => {
                         </t-button>
                     </div>
                 </div>
-                <div class="px-4 pb-6" v-else v-html="memoContent"></div>
+                <div class="px-4 pb-6 overflow-y-auto break-words" v-else v-html="memoContent"></div>
             </div>
         </div>
     </div>

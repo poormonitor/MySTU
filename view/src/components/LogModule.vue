@@ -104,7 +104,7 @@ onBeforeUnmount(() => {
 
 <template>
     <div class="grid grid-cols-3 lg:grid-cols-5 divide-x contentHeight">
-        <div class="flex h-full overflow-x-hidden overflow-y-auto col-span-1" v-if="!loadingLogs">
+        <div class="flex h-full overflow-x-hidden col-span-1" v-if="!loadingLogs">
             <t-menu theme="light" :value="currentLog" @change="fetchLog">
                 <t-menu-item value="new" @click="editMode = true">
                     <template #icon>
@@ -123,7 +123,7 @@ onBeforeUnmount(() => {
         </div>
         <t-loading class="mt-6 flex justify-center" text="加载中..." size="small" v-else></t-loading>
         <div class="col-span-2 lg:col-span-4">
-            <div id="editArea" v-if="editMode || (currentLog && !loadingLog)" class="overflow-y-auto">
+            <div id="editArea" v-if="editMode || (currentLog && !loadingLog)">
                 <div class="p-8" v-if="!editMode">
                     <p class="text-3xl font-bold"> {{ logData.title }}</p>
                     <div class="mt-2 text-gray-500">

@@ -88,7 +88,7 @@ onMounted(() => {
         <Search v-model:visible="SearchVisible" @updateInfo="switchInfo" @confirm="SearchVisible = false" />
         <EditStudent v-model="userEditVisible" :student="currentStudent" @after="updateCls"
             @refresh="studentRenderKey++" v-if="userEditVisible" />
-        <div id="classOption" class="flex overflow-x-hidden overflow-y-auto">
+        <div id="classOption" class="flex overflow-x-hidden">
             <t-menu theme="light" :value="currentClass" @change="fetchStudents">
                 <t-menu-item v-for="cls in classesData" :value="cls.id">
                     <span> {{ cls.name }} </span>
@@ -96,7 +96,7 @@ onMounted(() => {
                 </t-menu-item>
             </t-menu>
         </div>
-        <div id="studentOption" class="overflow-x-hidden overflow-y-auto" :class="{ 'flex': isNumber(currentClass) }">
+        <div id="studentOption" class="overflow-x-hidden" :class="{ 'flex': isNumber(currentClass) }">
             <t-menu theme="light" :value="currentStudent" v-if="isNumber(currentClass)" @change="switchStudent">
                 <t-menu-item v-for="stu in studentsData" :value="stu.id">
                     <span> {{ stu.name }} </span>
