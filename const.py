@@ -22,3 +22,12 @@ info = {
     "residence": "居住地",
     "memo": "备注",
 }
+
+
+def datetime_to_str(date_time):
+    from pytz import timezone
+
+    tz = timezone("Asia/Shanghai")
+    utc = timezone("UTC")
+
+    return date_time.replace(tzinfo=utc).astimezone(tz).strftime("%Y-%m-%d %H:%M:%S")

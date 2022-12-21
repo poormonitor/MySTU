@@ -42,12 +42,14 @@ def passwd():
 @jwt_required()
 @admin_required
 def getUsers():
+    from const import datetime_to_str
+
     claims = get_jwt()
 
     users = [i.to_dict() for i in User.query.all()]
     for i in range(len(users)):
         users[i]["last_login"] = (
-            users[i]["last_login"].strftime("%Y-%m-%d %H:%M:%S")
+            datetime_to_str(users[i]["last_login"])
             if users[i]["last_login"]
             else ""
         )

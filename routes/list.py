@@ -94,6 +94,7 @@ def getLogs():
     from models.log import Log
     from models.user import User
     from models import db
+    from const import datetime_to_str
 
     student = request.args.get("student")
 
@@ -108,7 +109,7 @@ def getLogs():
     logs = [
         {
             "id": i[0],
-            "time": i[1].strftime("%Y-%m-%d %H:%M:%S"),
+            "time": datetime_to_str(i[1]),
             "user": i[2],
             "title": i[3],
         }
@@ -122,12 +123,13 @@ def getLogs():
 @jwt_required()
 def getLog():
     from models.log import Log
+    from const import datetime_to_str
 
     logid = request.args.get("id")
 
     logInfo = Log.query.filter_by(id=logid).first()
     logInfo = logInfo.to_dict()
-    logInfo["indate"] = logInfo["indate"].strftime("%Y-%m-%d %H:%M:%S")
+    logInfo["indate"] = datetime_to_str(logInfo["indate"])
 
     return jsonify(status="ok", data={"logInfo": logInfo})
 
