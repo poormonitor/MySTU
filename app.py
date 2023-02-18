@@ -19,8 +19,7 @@ def create_app():
     JWTManager(app)
 
     database = os.path.join(os.path.dirname(__file__), "data.sqlite")
-    app.config["SECRET_KEY"] = os.getenv("MySTUSecretKey", default=os.urandom(24))
-    app.config["SESSION_COOKIE_PATH"] = "/"
+    app.config["JWT_SECRET_KEY"] = os.getenv("MySTUSecretKey", default=os.urandom(24))
     app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 2592000
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + database
     app.config["SQLALCHEMY_COMMIT_ON_TEARDOWN"] = True
