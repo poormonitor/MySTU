@@ -18,15 +18,12 @@ def create_app():
     CORS(app)
     JWTManager(app)
 
-    database = os.path.join(os.path.dirname(__file__), "data.sqlite")
-    app.config["JWT_SECRET_KEY"] = os.getenv("MySTUSecretKey", default=os.urandom(24))
-    app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 2592000
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + database
-    app.config["SQLALCHEMY_COMMIT_ON_TEARDOWN"] = True
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config.from_object("config.Config")
 
     db = models_init_app(app)
     routes_init_app(app)
+
+    database = os.path.join(os.path.dirname(__file__), "data.sqlite")
     exists = os.path.isfile(database)
     with app.app_context():
         db.create_all()
