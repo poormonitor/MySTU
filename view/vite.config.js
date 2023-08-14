@@ -6,15 +6,42 @@ import { TDesignResolver } from 'unplugin-vue-components/resolvers';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(),
-  AutoImport({
-    resolvers: [TDesignResolver({
-      library: 'vue-next'
-    })],
-  }),
-  Components({
-    resolvers: [TDesignResolver({
-      library: 'vue-next'
-    })],
-  }),]
+	plugins: [vue(),
+	AutoImport({
+		resolvers: [TDesignResolver({
+			library: 'vue-next'
+		})],
+	}),
+	Components({
+		resolvers: [TDesignResolver({
+			library: 'vue-next'
+		})],
+	}),],
+	build: {
+		chunkSizeWarningLimit: 500,
+		cssCodeSplit: false,
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					vue: ["vue", "vue-router"],
+					icons: ["tdesign-icons-vue-next"],
+				},
+				chunkFileNames: (chunkInfo) => {
+					if (chunkInfo.moduleIds[0].includes("node_modules")) {
+						return "assets/vendor-[hash].js";
+					}
+					return "assets/index-[hash].js";
+				},
+			},
+		},
+		brotliSize: false,
+	},
+	server: {
+		proxy: {
+			'/api': {
+				target: 'http://127.0.0.1:5000',
+				changeOrigin: true,
+			},
+		},
+	},
 })
