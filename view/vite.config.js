@@ -27,9 +27,6 @@ export default defineConfig({
 					icons: ["tdesign-icons-vue-next"],
 				},
 				chunkFileNames: (chunkInfo) => {
-					if (chunkInfo.moduleIds[0].includes("node_modules")) {
-						return "assets/vendor-[hash].js";
-					}
 					return "assets/index-[hash].js";
 				},
 			},
