@@ -26,9 +26,7 @@ export default defineConfig({
 					vue: ["vue", "vue-router"],
 					icons: ["tdesign-icons-vue-next"],
 				},
-				chunkFileNames: (chunkInfo) => {
-					return "assets/index-[hash].js";
-				},
+				chunkFileNames: "assets/index-[hash].js",
 			},
 		},
 		brotliSize: false,

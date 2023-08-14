@@ -1318,17 +1318,17 @@ tailwindcss@^3.2.4:
     quick-lru "^5.1.1"
     resolve "^1.22.1"
 
-tdesign-icons-vue-next@0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/tdesign-icons-vue-next/-/tdesign-icons-vue-next-0.2.0.tgz#ef367a2cee4591050e870bd6bf7fc773f6789aa5"
-  integrity sha512-T5M3VzplRsawyd4hFnLDAZS6xJHyJTavFdSwVXRWC1kN9BIxkxAupExbHUJWoT0fuxWjrMB7VJyxMQ8Nj5OofQ==
-  dependencies:
-    "@babel/runtime" "^7.16.3"
-
 tdesign-icons-vue-next@^0.1.12:
   version "0.1.12"
   resolved "https://registry.yarnpkg.com/tdesign-icons-vue-next/-/tdesign-icons-vue-next-0.1.12.tgz#4f3fca257f104b8270a992acebebbede9c1943ed"
   integrity sha512-i+hkCeq+qjI+Gau9TeSmdrvzopQZtZWb/AxFaLyKH4mmnItiiU9lpjIg9wYcLYhFONeuGhHgG0n4YhVxgW8eHA==
+  dependencies:
+    "@babel/runtime" "^7.16.3"
+
+tdesign-icons-vue-next@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/tdesign-icons-vue-next/-/tdesign-icons-vue-next-0.2.0.tgz#ef367a2cee4591050e870bd6bf7fc773f6789aa5"
+  integrity sha512-T5M3VzplRsawyd4hFnLDAZS6xJHyJTavFdSwVXRWC1kN9BIxkxAupExbHUJWoT0fuxWjrMB7VJyxMQ8Nj5OofQ==
   dependencies:
     "@babel/runtime" "^7.16.3"
 
