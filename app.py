@@ -9,7 +9,6 @@ from models import init_app as models_init_app
 from routes import init_app as routes_init_app
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
-import os
 
 
 def create_app():
@@ -23,12 +22,13 @@ def create_app():
     db = models_init_app(app)
     routes_init_app(app)
 
-    database = os.path.join(os.path.dirname(__file__), "data.sqlite")
-    exists = os.path.isfile(database)
     with app.app_context():
         db.create_all()
-        if not exists:
-            from models.user import User
+
+        from models.user import User
+
+        user = db.session.query(User).filter_by(admin=True).count()
+        if not user:
             from hashlib import sha256
             from bcrypt import gensalt, hashpw
 
