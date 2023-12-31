@@ -24,7 +24,7 @@ instance.interceptors.response.use((response) => {
 }, (error) => {
     if (!error.response) {
         MessagePlugin.error("网络错误，请检查网络。")
-    } else if (Math.floor(error.response.status / 100) == 4) {
+    } else if (error.response.status == 401) {
         logOut()
         MessagePlugin.error("您没有登录，请先登录。")
         setTimeout(() => {
@@ -33,9 +33,6 @@ instance.interceptors.response.use((response) => {
         }, 1000)
     } else {
         MessagePlugin.error("系统错误。")
-        setTimeout(() => {
-            location.reload()
-        }, 1000)
     }
     return Promise.reject(error);
 })

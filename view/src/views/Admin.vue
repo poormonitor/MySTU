@@ -4,7 +4,8 @@ import { useRoute } from "vue-router"
 import { IconFont } from 'tdesign-icons-vue-next';
 const mngtPath = [
     { to: { name: "userAdmin" }, text: "用户管理", icon: "usergroup-add" },
-    { to: { name: "uploadExcel" }, text: "上传数据", icon: "cloud-upload" }
+    { to: { name: "uploadExcel" }, text: "上传数据", icon: "cloud-upload" },
+    { to: { name: "uploadImage" }, text: "上传图片", icon: "image-add" },
 ]
 const route = useRoute()
 const currentRoute = computed(() => route.name)
@@ -12,9 +13,16 @@ const currentRoute = computed(() => route.name)
 
 <template>
     <div class="h-full flex flex-row divide-x">
-        <div id="adminNavi" class="flex overflow-x-hidden basis-1/4 md:basis-1/6">
+        <div
+            id="adminNavi"
+            class="flex overflow-x-hidden basis-1/4 md:basis-1/6"
+        >
             <t-menu theme="light" :value="currentRoute">
-                <t-menu-item :value="path.to.name" :to="path.to" v-for="path in mngtPath">
+                <t-menu-item
+                    :value="path.to.name"
+                    :to="path.to"
+                    v-for="path in mngtPath"
+                >
                     {{ path.text }}
                     <template #icon>
                         <icon-font class="mt-1" :name="path.icon" />
@@ -30,6 +38,6 @@ const currentRoute = computed(() => route.name)
 
 <style>
 .adminHeight {
-    height: calc(100vh - 3.5rem)
+    height: calc(100vh - 3.5rem);
 }
 </style>

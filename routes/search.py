@@ -56,6 +56,5 @@ def search():
         }
 
     result = [e for i in result if (e := getContent(i, keyword))]
-    print(result)
 
     return jsonify(status="ok", data=result)

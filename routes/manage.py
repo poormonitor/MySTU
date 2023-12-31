@@ -49,9 +49,7 @@ def getUsers():
     users = [i.to_dict() for i in User.query.all()]
     for i in range(len(users)):
         users[i]["last_login"] = (
-            datetime_to_str(users[i]["last_login"])
-            if users[i]["last_login"]
-            else ""
+            datetime_to_str(users[i]["last_login"]) if users[i]["last_login"] else ""
         )
         del users[i]["passwd"]
 
@@ -136,8 +134,26 @@ def upload():
     data = request.files["data"]
     filename = NamedTemporaryFile(delete=False, suffix=".xlsx").name
     data.save(filename)
-    subprocess.Popen(
-        [sys.executable, os.path.join(path, "import.py"), filename]
-    )
+    subprocess.Popen([sys.executable, os.path.join(path, "import.py"), filename])
+
+    return jsonify(status="ok")
+
+
+@manage_bp.route("/admin/image", methods=["POST"])
+@jwt_required()
+@admin_required
+def image():
+    import os
+
+    data = request.files["data"]
+    filename = data.filename
+
+    if not os.path.exists("uploads/img"):
+        os.mkdir("uploads")
+        os.mkdir("uploads/img")
+    if os.path.exists("uploads/img/" + filename):
+        os.remove("uploads/img/" + filename)
+
+    data.save("uploads/img/" + filename)
 
     return jsonify(status="ok")

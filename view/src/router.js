@@ -36,6 +36,11 @@ const routes = [
                         name: "uploadExcel",
                         path: "upload",
                         component: () => import("./components/UploadExcel.vue")
+                    },
+                    {
+                        name: "uploadImage",
+                        path: "image",
+                        component: () => import("./components/UploadImage.vue")
                     }
                 ]
             }
