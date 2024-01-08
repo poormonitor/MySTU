@@ -12,7 +12,7 @@ class Student(db.Model):
     domicile = db.Column(db.String(8))
     party = db.Column(db.String(8))
     religion = db.Column(db.String(8))
-    identity = db.Column(db.String(24))		
+    identity = db.Column(db.String(24))
     bank = db.Column(db.String(16))
     domitory = db.Column(db.String(32), index=True)
     bed = db.Column(db.String(8))
@@ -33,25 +33,25 @@ class Student(db.Model):
         (
             self.id,
             self.name,
-            self.cls,
             self.sex,
-            self.phone,
-            self.people,
-            self.domicile,
+            self.cls,
             self.party,
+            self.people,
             self.religion,
             self.identity,
             self.bank,
+            self.phone,
+            self.email,
+            self.qq,
             self.domitory,
             self.bed,
-            self.qq,
-            self.email,
-            self.residence,
             self.contact,
+            self.domicile,
             self.fcontact1,
             self.fcontact1phone,
             self.fcontact2,
             self.fcontact2phone,
+            self.residence,
             self.memo,
         ) = args
 

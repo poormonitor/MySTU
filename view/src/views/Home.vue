@@ -145,9 +145,9 @@ onMounted(() => {
                 <t-skeleton theme="paragraph"></t-skeleton>
             </div>
         </div>
-        <div class="z-10 cursor-pointer border-2 border-gray-200 transition bg-whtie hover:bg-slate-100 shadow-lg hover:shadow-xl rounded-full absolute bottom-3 left-3 p-4 text-black"
+        <div class="z-10 cursor-pointer border-2 border-gray-200 transition bg-white hover:bg-slate-100 shadow-lg hover:shadow-xl rounded-full absolute bottom-3 left-3 p-4 text-black"
             @click="SearchVisible = true">
-            <div class="w-5 h-5 flex justify-items-center items-center">
+            <div class="flex justify-items-center items-center">
                 <icon-font class="text-black" size="large" name="search"></icon-font>
             </div>
         </div>

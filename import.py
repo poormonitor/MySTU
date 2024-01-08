@@ -1,6 +1,8 @@
 from server import app
 import pandas as pd
+from const import info
 import sys
+import os
 
 if len(sys.argv) < 2:
     filename = input("请输入文件路径：")
@@ -11,7 +13,6 @@ else:
 
 df = pd.read_excel(filename, dtype="str")
 df.columns = df.columns.map(lambda x: x.replace("*", ""))
-df = df.drop("当前位置", axis=1)
 df = df.drop("邮编", axis=1)
 df = df.drop("序号", axis=1)
 df = df.drop_duplicates(subset=["学号"])
@@ -24,8 +25,9 @@ with app.app_context():
     from models.student import Student
     from models import db
 
-    for i in list(df.to_numpy()):
-        db.session.add(Student(*list(i)))
+    for i in df.to_dict(orient="records"):
+        detail = [i.get(j, "") for j in info.values()]
+        db.session.add(Student(*detail))
         db.session.commit()
 
 if delete:
