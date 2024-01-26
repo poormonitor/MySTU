@@ -85,13 +85,11 @@ watch(currentClass, getStudents);
                 </t-select>
             </t-form-item>
             <t-form-item>
-                <t-button
-                    @click="deleteInfo"
-                    theme="danger"
-                    :disabled="!currentStudent"
-                >
-                    删除
-                </t-button>
+                <t-popconfirm content="确认删除吗" @confirm="deleteInfo">
+                    <t-button theme="danger" :disabled="!currentStudent">
+                        删除
+                    </t-button>
+                </t-popconfirm>
             </t-form-item>
         </t-form>
     </div>

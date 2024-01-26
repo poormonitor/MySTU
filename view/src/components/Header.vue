@@ -26,7 +26,7 @@ const changePassword = () => {
 let options = [
     {
         content: "后台管理",
-        "prefix-icon": () => h(ControlPlatformIcon, { class: "w-1.5 h-1.5" }),
+        prefixIcon: () => h(ControlPlatformIcon, { class: "w-1.5 h-1.5" }),
         value: 3,
         click: () => {
             router.push({ name: "userAdmin" });
@@ -34,13 +34,13 @@ let options = [
     },
     {
         content: "修改密码",
-        "prefix-icon": () => h(LockOnIcon, { class: "w-1.5 h-1.5" }),
+        prefixIcon: () => h(LockOnIcon, { class: "w-1.5 h-1.5" }),
         value: 1,
         click: changePassword,
     },
     {
         content: "退出登录",
-        "prefix-icon": () => h(LogoutIcon, { class: "w-1.5 h-1.5" }),
+        prefixIcon: () => h(LogoutIcon, { class: "w-1.5 h-1.5" }),
         value: 2,
         click: logOutFunc,
     },
