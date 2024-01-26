@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import { IconFont } from "tdesign-icons-vue-next";
+import { CloudUploadIcon, DeleteIcon } from "tdesign-icons-vue-next";
 import { MessagePlugin } from "tdesign-vue-next";
 import axios from "../axios";
 
@@ -38,13 +38,13 @@ const upload = () => {
             <t-space class="mb-6">
                 <t-button variant="outline" theme="primary" @click="upload">
                     <template #icon>
-                        <icon-font name="cloud-upload" />
+                        <CloudUploadIcon class="w-1.5 h-1.5" />
                     </template>
                     点击上传
                 </t-button>
                 <t-button variant="outline" theme="danger" @click="files = []">
                     <template #icon>
-                        <icon-font name="delete" />
+                        <DeleteIcon class="w-1.5 h-1.5" />
                     </template>
                     清空
                 </t-button>

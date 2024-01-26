@@ -1,7 +1,7 @@
 <script setup>
 import { watch, ref, shallowRef, onBeforeUnmount, reactive } from "vue";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
-import { IconFont } from "tdesign-icons-vue-next";
+import { AddIcon } from "tdesign-icons-vue-next";
 import axios from "../axios";
 import "@wangeditor/editor/dist/css/style.css";
 
@@ -120,7 +120,7 @@ onBeforeUnmount(() => {
             <t-menu theme="light" :value="currentLog" @change="fetchLog">
                 <t-menu-item value="new" @click="editMode = true">
                     <template #icon>
-                        <icon-font name="add" />
+                        <AddIcon class="w-1.5 h-1.5" />
                     </template>
                     <b>新增谈话记录</b>
                 </t-menu-item>

@@ -157,3 +157,47 @@ def image():
     data.save("uploads/img/" + filename)
 
     return jsonify(status="ok")
+
+
+@manage_bp.route("/admin/delete/class", methods=["POST"])
+@jwt_required()
+@admin_required
+def delete_class():
+    from models.student import Student
+    import os
+
+    data = request.get_json()
+    cls = data["cls"]
+
+    clsList = db.session.query(Student.cls).distinct().order_by(Student.cls.asc()).all()
+    clsName = clsList[cls][0]
+
+    ids = [i.id for i in Student.query.filter_by(cls=clsName).all()]
+
+    for i in ids:
+        if os.path.exists("uploads/img/" + i + ".*"):
+            os.remove("uploads/img/" + i + ".*")
+
+    Student.query.filter_by(cls=clsName).delete()
+    db.session.commit()
+
+    return jsonify(status="ok")
+
+
+@manage_bp.route("/admin/delete/student", methods=["POST"])
+@jwt_required()
+@admin_required
+def delete_student():
+    from models.student import Student
+    import os
+
+    data = request.get_json()
+    id = data["id"]
+
+    Student.query.filter_by(id=id).delete()
+    db.session.commit()
+
+    if os.path.exists("uploads/img/" + id + ".*"):
+        os.remove("uploads/img/" + id + ".*")
+
+    return jsonify(status="ok")

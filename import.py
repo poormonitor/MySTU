@@ -27,7 +27,14 @@ with app.app_context():
 
     for i in df.to_dict(orient="records"):
         detail = [i.get(j, "") for j in info.values()]
-        db.session.add(Student(*detail))
+        id = detail[0]
+
+        if Student.query.filter_by(id=id).first():
+            stu = Student.query.filter_by(id=id)
+            stu.update({k: v for k, v in zip(info.values(), detail)})
+        else:
+            db.session.add(Student(*detail))
+
         db.session.commit()
 
 if delete:

@@ -1,14 +1,21 @@
 <script setup>
-import { computed } from "vue"
-import { useRoute } from "vue-router"
-import { IconFont } from 'tdesign-icons-vue-next';
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import {
+    UsergroupAddIcon,
+    CloudUploadIcon,
+    ImageAddIcon,
+    Delete1Icon,
+} from "tdesign-icons-vue-next";
+
 const mngtPath = [
-    { to: { name: "userAdmin" }, text: "用户管理", icon: "usergroup-add" },
-    { to: { name: "uploadExcel" }, text: "上传数据", icon: "cloud-upload" },
-    { to: { name: "uploadImage" }, text: "上传图片", icon: "image-add" },
-]
-const route = useRoute()
-const currentRoute = computed(() => route.name)
+    { to: { name: "userAdmin" }, text: "用户管理", icon: UsergroupAddIcon },
+    { to: { name: "uploadExcel" }, text: "上传数据", icon: CloudUploadIcon },
+    { to: { name: "uploadImage" }, text: "上传图片", icon: ImageAddIcon },
+    { to: { name: "delete" }, text: "删除信息", icon: Delete1Icon },
+];
+const route = useRoute();
+const currentRoute = computed(() => route.name);
 </script>
 
 <template>
@@ -25,7 +32,7 @@ const currentRoute = computed(() => route.name)
                 >
                     {{ path.text }}
                     <template #icon>
-                        <icon-font class="mt-1" :name="path.icon" />
+                        <Component class="!w-4 !h-4" :is="path.icon" />
                     </template>
                 </t-menu-item>
             </t-menu>

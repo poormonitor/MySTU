@@ -30,7 +30,6 @@ def search():
         )
     )
 
-    result = result.limit(5)
     result = result.all()
 
     def getContent(student: Student, keyword: str):
@@ -40,11 +39,11 @@ def search():
             s += "\n"
 
         for target in keyword.split(" "):
-            rs = re.search(r".*(%s).+" % target, s)
+            rs = re.search(r".*(%s).*" % target, s)
 
             if not rs:
                 return None
-                
+
             gp = rs.group(), rs.group(1)
             f += gp[0].replace(gp[1], "<b>" + gp[1] + "</b>") + "\n"
 
