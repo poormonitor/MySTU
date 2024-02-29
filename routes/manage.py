@@ -150,12 +150,12 @@ def image():
 
     if not os.path.exists("uploads"):
         os.mkdir("uploads")     
-    if not os.path.exists("uploads/img"):
-        os.mkdir("uploads/img")
-    if os.path.exists("uploads/img/" + filename):
-        os.remove("uploads/img/" + filename)
+    if not os.path.exists("uploads/pic"):
+        os.mkdir("uploads/pic")
+    if os.path.exists("uploads/pic/" + filename):
+        os.remove("uploads/pic/" + filename)
 
-    data.save("uploads/img/" + filename)
+    data.save("uploads/pic/" + filename)
 
     return jsonify(status="ok")
 
@@ -176,8 +176,8 @@ def delete_class():
     ids = [i.id for i in Student.query.filter_by(cls=clsName).all()]
 
     for i in ids:
-        if os.path.exists("uploads/img/" + i + ".*"):
-            os.remove("uploads/img/" + i + ".*")
+        if os.path.exists("uploads/pic/" + i + ".*"):
+            os.remove("uploads/pic/" + i + ".*")
 
     Student.query.filter_by(cls=clsName).delete()
     db.session.commit()
@@ -198,7 +198,7 @@ def delete_student():
     Student.query.filter_by(id=id).delete()
     db.session.commit()
 
-    if os.path.exists("uploads/img/" + id + ".*"):
-        os.remove("uploads/img/" + id + ".*")
+    if os.path.exists("uploads/pic/" + id + ".*"):
+        os.remove("uploads/pic/" + id + ".*")
 
     return jsonify(status="ok")
