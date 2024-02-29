@@ -148,8 +148,9 @@ def image():
     data = request.files["data"]
     filename = data.filename
 
+    if not os.path.exists("uploads"):
+        os.mkdir("uploads")     
     if not os.path.exists("uploads/img"):
-        os.mkdir("uploads")
         os.mkdir("uploads/img")
     if os.path.exists("uploads/img/" + filename):
         os.remove("uploads/img/" + filename)
