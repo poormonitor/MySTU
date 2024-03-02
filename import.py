@@ -11,7 +11,7 @@ else:
     filename = sys.argv[1]
     delete = True
 
-df = pd.read_excel(filename, dtype="str")
+df = pd.read_excel(filename, dtype="str", engine="openpyxl")
 df.columns = df.columns.map(lambda x: x.replace("*", ""))
 df = df.drop("邮编", axis=1)
 df = df.drop("序号", axis=1)

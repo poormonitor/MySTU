@@ -55,7 +55,7 @@ const submitRequest = () => {
     axios.post("/edit", studentInfo.data).then((response) => {
         if (response.data.status == "ok") {
             visible.value = false
-            MessagePlugin.success("用户编辑成功。")
+            MessagePlugin.success("用户编辑成功")
             if (studentInfo.data.cls != originCls.value) {
                 emit("after", studentInfo.data.cls)
             }

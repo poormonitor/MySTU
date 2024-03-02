@@ -16,12 +16,12 @@ def login():
     if not result:
         return jsonify(
             status="error",
-            data={"msg": "您输入的用户不存在，请检查。"},
+            data={"msg": "您输入的用户不存在，请检查"},
         )
     if not checkpw(passwd.encode(), result.passwd):
         return jsonify(
             status="error",
-            data={"msg": "您输入的密码不正确，请检查。"},
+            data={"msg": "您输入的密码不正确，请检查"},
         )
 
     result.last_login = db.func.now()

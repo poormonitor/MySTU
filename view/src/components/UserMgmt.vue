@@ -107,7 +107,7 @@ const switchAdmin = (id, val) => {
         })
         .then((response) => {
             if ((response.data.status = "ok")) {
-                MessagePlugin.success("修改成功。");
+                MessagePlugin.success("修改成功");
             } else {
                 target.admin = origin;
             }
@@ -130,7 +130,7 @@ const deleteUser = (id) => {
         .then((response) => {
             if (response.data.status == "ok") {
                 data.value = data.value.filter((item) => item.id != id);
-                MessagePlugin.success("删除成功。");
+                MessagePlugin.success("删除成功");
             }
         });
 };

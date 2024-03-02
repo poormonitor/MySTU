@@ -25,6 +25,7 @@ class Student(db.Model):
     fcontact2 = db.Column(db.String(8))
     fcontact2phone = db.Column(db.String(16))
     memo = db.Column(db.Text)
+    memoupdate = db.Column(db.DateTime, default=None, onupdate=db.func.now())
 
     def __repr__(self):
         return "<Student %r>" % self.name

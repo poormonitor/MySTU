@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required
+from datetime import timezone
 
 list_bp = Blueprint("list", __name__)
 
@@ -20,12 +21,20 @@ def getClasses():
         .filter(Log.indate >= datetime.now() - timedelta(days=3))
         .all()
     )
-    logCnt = {k: v for k, v in logCnt}
+    memoUpdateCnt = (
+        db.session.query(Student.cls.distinct())
+        .filter(Student.memoupdate >= datetime.now() - timedelta(days=3))
+        .all()
+    )
+    logCnt = {i[0] for i in logCnt if i[1] > 0}
+    memoUpdateCnt = {i[0] for i in memoUpdateCnt}
+    logCnt = logCnt.union(memoUpdateCnt)
+
     clsList = [
         {
             "id": i,
             "name": clsList[i][0],
-            "alert": logCnt[clsList[i][0]] > 0 if clsList[i][0] in logCnt else False,
+            "alert": clsList[i][0] in logCnt,
         }
         for i in range(len(clsList))
     ]
@@ -54,21 +63,30 @@ def getStudents():
         .order_by(Student.name.asc())
         .all()
     )
+
     logCnt = (
         db.session.query(Student.id, db.func.count(Log.id))
         .outerjoin(Student, Student.id == Log.student)
         .group_by(Student.id)
         .filter(Student.cls == clsName)
-        .filter(Log.indate >= datetime.now() - timedelta(days=3))
+        .filter(Log.indate >= datetime.now() - timedelta(days=7))
         .all()
     )
-    logCnt = {k: v for k, v in logCnt}
+    memoUpdateCnt = (
+        db.session.query(Student.id)
+        .filter(Student.cls == clsName)
+        .filter(Student.memoupdate >= datetime.now() - timedelta(days=7))
+        .all()
+    )
+    logCnt = {i[0] for i in logCnt if i[1] > 0}
+    memoUpdateCnt = {i[0] for i in memoUpdateCnt}
+    logCnt = logCnt.union(memoUpdateCnt)
 
     stuList = [
         {
             "id": i[0],
             "name": i[1],
-            "alert": logCnt[i[0]] > 0 if i[0] in logCnt else False,
+            "alert": i[0] in logCnt,
         }
         for i in stuList
     ]

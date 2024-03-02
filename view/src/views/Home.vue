@@ -2,7 +2,6 @@
 import { ref, onMounted } from "vue";
 import { isNumber } from "lodash";
 import {
-    CaretLeftSmallIcon,
     FileCopyIcon,
     UsergroupIcon,
     SearchIcon,
@@ -109,10 +108,14 @@ onMounted(() => {
             <t-menu theme="light" :value="currentClass" @change="fetchStudents">
                 <t-menu-item v-for="cls in classesData" :value="cls.id">
                     <span> {{ cls.name }} </span>
-                    <CaretLeftSmallIcon
-                        class="text-red-600 text-lg"
+                    <svg
+                        width="4"
+                        height="4"
+                        class="inline ml-2"
                         v-if="cls.alert"
-                    />
+                    >
+                        <circle cx="2" cy="2" r="2" fill="red" />
+                    </svg>
                 </t-menu-item>
             </t-menu>
         </div>
@@ -128,11 +131,15 @@ onMounted(() => {
                 @change="switchStudent"
             >
                 <t-menu-item v-for="stu in studentsData" :value="stu.id">
-                    <span> {{ stu.name }} </span>
-                    <CaretLeftSmallIcon
-                        class="text-red-600 text-lg"
+                    <span>{{ stu.name }}</span>
+                    <svg
+                        width="4"
+                        height="4"
+                        class="inline ml-2"
                         v-if="stu.alert"
-                    />
+                    >
+                        <circle cx="2" cy="2" r="2" fill="red" />
+                    </svg>
                 </t-menu-item>
             </t-menu>
             <div class="m-4" v-else>
@@ -211,6 +218,10 @@ onMounted(() => {
 </template>
 
 <style>
+.red-dot {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='2' cy='2' r='2' fill='red' /%3E%3C/svg%3E");
+}
+
 .t-tabs__nav-container {
     margin-left: 6.5rem;
 }

@@ -86,7 +86,8 @@ const submitMemo = () => {
         id: props.student
     }).then((response) => {
         if (response.data.status == "ok") {
-            MessagePlugin.success("备忘提交成功。")
+            MessagePlugin.success("备忘提交成功")
+            memoEditing.value = false
         }
     })
 }

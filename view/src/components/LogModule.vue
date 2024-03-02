@@ -77,12 +77,12 @@ const submitLog = () => {
         })
         .catch(() => {
             submitResult.value = "error";
-            submitMessage.value = "提交失败，请检查网络。";
+            submitMessage.value = "提交失败，请检查网络";
         })
         .then((response) => {
             if (response.data.status == "ok") {
                 submitResult.value = "success";
-                submitMessage.value = "记录提交成功！";
+                submitMessage.value = "记录提交成功";
                 fetchLogs(props.student);
                 currentLog.value = response.data.data.id;
                 editMode.value = false;

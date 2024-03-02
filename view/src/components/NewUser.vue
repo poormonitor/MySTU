@@ -82,7 +82,7 @@ const submitRequest = () => {
                     newUser.value.admin
                 );
                 newUser.value = { passwd: "", id: "", name: "", admin: false };
-                MessagePlugin.success("用户添加成功。");
+                MessagePlugin.success("用户添加成功");
             } else {
                 MessagePlugin.error(response.data.data.msg);
             }

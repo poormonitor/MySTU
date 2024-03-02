@@ -23,16 +23,16 @@ instance.interceptors.response.use((response) => {
     return response
 }, (error) => {
     if (!error.response) {
-        MessagePlugin.error("网络错误，请检查网络。")
+        MessagePlugin.error("网络错误，请检查网络")
     } else if (error.response.status == 401) {
         logOut()
-        MessagePlugin.error("您没有登录，请先登录。")
+        MessagePlugin.error("您没有登录，请先登录")
         setTimeout(() => {
             router.push({ name: "login" })
             location.reload()
         }, 1000)
     } else {
-        MessagePlugin.error("系统错误。")
+        MessagePlugin.error("系统错误")
     }
     return Promise.reject(error);
 })

@@ -98,7 +98,7 @@ def newUser():
 
     user = User.query.filter_by(id=uid).first()
     if user:
-        return jsonify(status="error", data={"msg": "已经有相同用户名用户存在。"})
+        return jsonify(status="error", data={"msg": "已经有相同用户名用户存在"})
 
     db.session.add(User(uid, name, passwd, admin))
     db.session.commit()

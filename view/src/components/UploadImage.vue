@@ -17,10 +17,10 @@ const requestMethod = (file) => {
             if (response.data.status == "ok") {
                 file[0].percent = 100;
                 resolve({ status: "success" });
-                MessagePlugin.success("上传成功！");
+                MessagePlugin.success("上传成功");
             } else {
                 resolve({ status: "fail" });
-                MessagePlugin.error("发生错误了，请检查文件。");
+                MessagePlugin.error("发生错误了，请检查文件");
             }
         });
     });
