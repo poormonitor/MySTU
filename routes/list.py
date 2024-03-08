@@ -18,12 +18,12 @@ def getClasses():
         db.session.query(Student.cls, db.func.count(Log.id))
         .outerjoin(Student, Student.id == Log.student)
         .group_by(Student.cls)
-        .filter(Log.indate >= datetime.now() - timedelta(days=3))
+        .filter(Log.indate >= datetime.now() - timedelta(days=7))
         .all()
     )
     memoUpdateCnt = (
         db.session.query(Student.cls.distinct())
-        .filter(Student.memoupdate >= datetime.now() - timedelta(days=3))
+        .filter(Student.memoupdate >= datetime.now() - timedelta(days=7))
         .all()
     )
     logCnt = {i[0] for i in logCnt if i[1] > 0}
