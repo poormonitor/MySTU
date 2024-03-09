@@ -34,8 +34,9 @@ def search():
 
     def getContent(student: Student, keyword: str):
         s, f = "", ""
-        for key, value in student.to_dict().items():
-            s += info[key] + ": " + str(value)
+        
+        for key in info.keys():
+            s += info[key] + ": " + str(getattr(student, key))
             s += "\n"
 
         for target in keyword.split(" "):
