@@ -1,6 +1,6 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, make_response
 from flask_jwt_extended import jwt_required
-from datetime import timezone
+
 
 list_bp = Blueprint("list", __name__)
 
@@ -164,6 +164,12 @@ def getPic():
     except FileNotFoundError:
         return jsonify(status="error")
 
-    return jsonify(
-        status="ok", data={"format": "jpeg", "pic": b64encode(content).decode()}
+    resp = make_response(
+        jsonify(
+            status="ok", data={"format": "jpeg", "pic": b64encode(content).decode()}
+        )
     )
+
+    resp.headers["Cache-Control"] = "private, max-age=604800"
+
+    return resp
