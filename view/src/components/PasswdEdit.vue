@@ -33,7 +33,6 @@ const rules = {
 }
 
 const submitRequest = () => {
-    console.log(123)
     if (!validatePasswd(passwd.passwd).result) {
         return
     }

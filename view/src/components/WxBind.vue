@@ -5,12 +5,11 @@ const route = useRoute();
 const router = useRouter();
 
 const appid = import.meta.env.VITE_APPID;
-const appsecret = import.meta.env.VITE_APPSECRET;
 
 const failed = ref(false);
 
 if (!route.params.code) {
-    let current_url = "https://stu.techo.cool/#/m";
+    let current_url = location.origin + "/#/wx/bind";
     current_url = encodeURIComponent(current_url);
     let token = route.params.token;
     window.location.href =

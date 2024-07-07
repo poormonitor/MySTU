@@ -17,7 +17,6 @@ const visible = computed({
 const url = ref("");
 
 watch(visible, (value) => {
-    console.log(visible.value);
     if (value) {
         let user = sessionStorage.getItem("user_mystu");
         let role = 0;

@@ -25,7 +25,6 @@ const columns = [
                 disabled: sessionStorage.getItem("user_mystu") == row.id,
                 label: ["是", "否"],
                 onChange(value) {
-                    console.log(value);
                     switchAdmin(row.id, value);
                 },
             });

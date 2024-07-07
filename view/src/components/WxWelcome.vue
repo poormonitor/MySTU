@@ -16,8 +16,8 @@ if (token) {
     else router.push({ name: "wx-student" });
 }
 
-if (!token || route.params.code) {
-    let current_url = "https://stu.techo.cool/#/m";
+if (!route.params.code) {
+    let current_url = location.origin + "/#/wx/welcome";
     current_url = encodeURIComponent(current_url);
     window.location.href =
         "https://open.weixin.qq.com/connect/oauth2/authorize?" +
@@ -26,9 +26,7 @@ if (!token || route.params.code) {
         "&response_type=code" +
         "&scope=snsapi_base" +
         "#wechat_redirect";
-}
-
-if (route.params.code) {
+} else {
     axios.post("/wx/login", { code: route.params.route }).then((response) => {
         if (response.data.status == "ok") {
             let token = response.data.data.access_token;
