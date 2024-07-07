@@ -94,7 +94,7 @@ const submitMemo = () => {
 </script>
 
 <template>
-    <div class="overflow-hidden contentHeight" v-if="!loadingData">
+    <div class="overflow-y-auto min-w-[400px] contentHeight" v-if="!loadingData">
         <div class="grid grid-cols-5 lg:grid-cols-4 divide-y md:divide-x md:divide-y-0">
             <div id="basicInfo" class="px-10 py-8 col-span-5 md:col-span-3 infoTab overflow-y-auto">
                 <div class="mb-7" v-for="k in Object.keys(infoMap)">

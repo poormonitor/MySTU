@@ -48,6 +48,7 @@ def getStudents():
     from datetime import timedelta, datetime
     from models.log import Log
     from models.student import Student
+    from models.weixin import Weixin
     from models import db
 
     cls = request.args.get("class")
@@ -82,11 +83,17 @@ def getStudents():
     memoUpdateCnt = {i[0] for i in memoUpdateCnt}
     logCnt = logCnt.union(memoUpdateCnt)
 
+    subquery = db.session.query(Student.id).filter(Student.cls == clsName).subquery()
+    weixinAttached = db.session.query(subquery).join(
+        Weixin, Weixin.attach == subquery.c.id
+    )
+
     stuList = [
         {
             "id": i[0],
             "name": i[1],
             "alert": i[0] in logCnt,
+            "weixin": i[0] in weixinAttached,
         }
         for i in stuList
     ]
@@ -98,10 +105,14 @@ def getStudents():
 @jwt_required()
 def getStudentInfo():
     from models.student import Student
+    from models.weixin import Weixin
 
     sid = request.args.get("student")
     student = Student.query.filter_by(id=sid).first().to_dict()
     student["sex"] = ["男", "女"][student["sex"]]
+
+    weixin = Weixin.query.filter_by(attach=sid).first()
+    student["attached"] = weixin is not None
 
     return jsonify(status="ok", data={"studentInfo": student})
 

@@ -4,14 +4,17 @@ import {
     ControlPlatformIcon,
     LockOnIcon,
     LogoutIcon,
+    LogoWechatStrokeIcon,
     ChevronDownIcon,
 } from "tdesign-icons-vue-next";
 import { useRouter } from "vue-router";
 import { logOut } from "../func";
 import PasswordSetter from "./PasswordSetter.vue";
+import BindDialog from "./BindDialog.vue";
 
 const router = useRouter();
 
+const bindVisible = ref(false);
 const passwdChangerVisible = ref(false);
 
 const logOutFunc = () => {
@@ -23,6 +26,10 @@ const changePassword = () => {
     passwdChangerVisible.value = true;
 };
 
+const changeBind = () => {
+    bindVisible.value = true;
+};
+
 let options = [
     {
         content: "后台管理",
@@ -31,6 +38,12 @@ let options = [
         click: () => {
             router.push({ name: "userAdmin" });
         },
+    },
+    {
+        content: "绑定微信",
+        prefixIcon: () => h(LogoWechatStrokeIcon, { class: "w-1.5 h-1.5" }),
+        value: 4,
+        click: changeBind,
     },
     {
         content: "修改密码",
@@ -58,7 +71,8 @@ const currentUser = sessionStorage.getItem("name_mystu");
 </script>
 
 <template>
-    <PasswordSetter v-model:visible="passwdChangerVisible" />
+    <PasswordSetter v-model="passwdChangerVisible" />
+    <BindDialog v-model="bindVisible" />
     <div
         class="bg-gradient-to-r from-cyan-500 to-blue-500 px-6 py-3 absolute h-14 w-full flex"
     >

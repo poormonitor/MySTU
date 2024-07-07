@@ -4,7 +4,7 @@ db = SQLAlchemy()
 
 
 def init_app(app):
-    from . import user, student, log
+    from . import user, student, log, weixin
 
     db.init_app(app)
     return db

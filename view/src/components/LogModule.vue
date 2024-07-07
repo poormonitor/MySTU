@@ -112,7 +112,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="grid grid-cols-3 lg:grid-cols-5 divide-x contentHeight">
+    <div class="flex divide-x-2 min-w-[600px] contentHeight">
         <div
             class="flex h-full overflow-x-hidden col-span-1"
             v-if="!loadingLogs"
@@ -143,7 +143,7 @@ onBeforeUnmount(() => {
             size="small"
             v-else
         ></t-loading>
-        <div class="col-span-2 lg:col-span-4">
+        <div class="flex-grow">
             <div id="editArea" v-if="editMode || (currentLog && !loadingLog)">
                 <div class="p-8" v-if="!editMode">
                     <p class="text-3xl font-bold">{{ logData.title }}</p>

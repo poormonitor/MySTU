@@ -39,7 +39,7 @@ const loginRequest = () => {
 </script>
 <template>
     <div
-        class="py-12 lg:py-16 bg-gradient-to-br from-cyan-50 to-blue-200 min-h-full"
+        class="pt-[20vh] bg-gradient-to-br from-cyan-50 to-blue-200 min-h-full"
     >
         <div
             class="text-center text-4xl lg:text-5xl mb-3 px-6 font-bold tracking-widest"
@@ -47,7 +47,7 @@ const loginRequest = () => {
             学生管理系统
         </div>
         <div
-            class="bg-white flex flex-col lg:flex-row rounded-2xl shadow-xl mx-10 lg:mx-24 mt-8 lg:mt-16 divide-y lg:divide-x lg:divide-y-0"
+            class="bg-white flex flex-col lg:flex-row rounded-2xl shadow-xl mx-10 lg:mx-24 xl:mx-auto mt-8 lg:mt-16 xl:w-3/5 divide-y lg:divide-x lg:divide-y-0"
         >
             <div class="mb-8 mx-4 flex justify-center items-center lg:w-2/5">
                 <div class="p-8 lg:p-12 mx-auto">

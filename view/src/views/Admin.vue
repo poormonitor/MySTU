@@ -22,7 +22,7 @@ const currentRoute = computed(() => route.name);
     <div class="h-full flex flex-row divide-x">
         <div
             id="adminNavi"
-            class="flex overflow-x-hidden basis-1/4 md:basis-1/6"
+            class="flex overflow-x-hidden"
         >
             <t-menu theme="light" :value="currentRoute">
                 <t-menu-item
@@ -37,7 +37,7 @@ const currentRoute = computed(() => route.name);
                 </t-menu-item>
             </t-menu>
         </div>
-        <div class="basis-3/4 md:basis-5/6 adminHeight">
+        <div class="basis-3/4 md:basis-5/6 overflow-x-auto adminHeight">
             <router-view></router-view>
         </div>
     </div>

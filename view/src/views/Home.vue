@@ -10,17 +10,19 @@ import LogModule from "../components/LogModule.vue";
 import InfoModule from "../components/InfoModule.vue";
 import EditStudent from "../components/EditStudent.vue";
 import Search from "../components/Search.vue";
+import BindStu from "../components/BindStu.vue";
 import axios from "../axios";
 
 const currentClass = ref();
 const currentStudent = ref();
-const currentName = ref();
+const currentData = ref();
 const classesData = ref();
 const studentsData = ref();
 const imgItem = ref(false);
 const currentTab = ref(1);
 const SearchVisible = ref(false);
 const userEditVisible = ref(false);
+const userBindVisible = ref(false);
 const studentRenderKey = ref(0);
 
 const fetchClasses = (callback, ...args) => {
@@ -65,9 +67,7 @@ const fetchStudentPic = () => {
 const switchStudent = (studentid) => {
     imgItem.value = false;
     currentStudent.value = studentid;
-    currentName.value = studentsData.value.find(
-        (item) => item.id == studentid
-    ).name;
+    currentData.value = studentsData.value.find((item) => item.id == studentid);
     SearchVisible.value = false;
     currentTab.value = 1;
     fetchStudentPic();
@@ -91,7 +91,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="grid grid-cols-6 md:grid-cols-8 divide-x-2 h-full">
+    <div class="flex divide-x-2 h-full overflow-x-auto overflow-y-hidden">
         <Search
             v-model:visible="SearchVisible"
             @updateInfo="switchInfo"
@@ -104,7 +104,8 @@ onMounted(() => {
             @refresh="studentRenderKey++"
             v-if="userEditVisible"
         />
-        <div id="classOption" class="flex overflow-x-hidden">
+        <BindStu :user="currentStudent" v-model="userBindVisible" />
+        <div id="classOption" class="flex min-w-[232px] overflow-x-hidden">
             <t-menu theme="light" :value="currentClass" @change="fetchStudents">
                 <t-menu-item v-for="cls in classesData" :value="cls.id">
                     <span> {{ cls.name }} </span>
@@ -121,7 +122,7 @@ onMounted(() => {
         </div>
         <div
             id="studentOption"
-            class="overflow-x-hidden"
+            class="overflow-x-hidden min-w-[232px]"
             :class="{ flex: isNumber(currentClass) }"
         >
             <t-menu
@@ -146,7 +147,7 @@ onMounted(() => {
                 <t-skeleton theme="paragraph"></t-skeleton>
             </div>
         </div>
-        <div id="studentInfo" class="col-span-4 md:col-span-6">
+        <div id="studentInfo" class="flex-grow">
             <div v-if="currentStudent" class="h-full">
                 <div id="basic" class="h-20 flex">
                     <div id="pic" class="ml-1 py-1">
@@ -163,24 +164,47 @@ onMounted(() => {
                     </div>
                     <div class="pl-6 flex">
                         <div class="flex self-end flex-col">
-                            <span class="text-3xl font-bold w-24 pb-1">{{
-                                currentName
-                            }}</span>
-                            <span class="text-sm text-gray-500">{{
-                                currentStudent
-                            }}</span>
-                        </div>
-                        <Transition>
-                            <div class="pl-4 self-end" v-if="currentTab == 1">
-                                <t-button
-                                    variant="dashed"
-                                    size="small"
-                                    @click="userEditVisible = true"
-                                >
-                                    编辑
-                                </t-button>
+                            <span class="text-3xl font-bold pb-1">
+                                {{ currentData.name }}
+                            </span>
+                            <div class="flex items-center h-6">
+                                <span class="text-sm text-gray-500">
+                                    {{ currentStudent }}
+                                </span>
+                                <Transition>
+                                    <div
+                                        class="pl-4 self-end"
+                                        v-if="currentTab == 1"
+                                    >
+                                        <t-button
+                                            variant="dashed"
+                                            size="small"
+                                            @click="userEditVisible = true"
+                                        >
+                                            编辑
+                                        </t-button>
+                                    </div>
+                                </Transition>
+                                <Transition>
+                                    <div
+                                        class="pl-1 self-end"
+                                        v-if="currentTab == 1"
+                                    >
+                                        <t-button
+                                            variant="dashed"
+                                            size="small"
+                                            @click="userBindVisible = true"
+                                        >
+                                            {{
+                                                currentData.weixin
+                                                    ? "已绑定"
+                                                    : "绑定微信"
+                                            }}
+                                        </t-button>
+                                    </div>
+                                </Transition>
                             </div>
-                        </Transition>
+                        </div>
                     </div>
                 </div>
                 <t-tabs v-model="currentTab">
