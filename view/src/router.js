@@ -89,6 +89,11 @@ const routes = [
                 path: "student",
                 component: () => import("./components/WxStudent.vue"),
             },
+            {
+                name: "wx-error",
+                path: "error",
+                component: () => import("./components/WxError.vue"),
+            }
         ],
     },
 ];

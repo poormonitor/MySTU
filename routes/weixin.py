@@ -39,7 +39,7 @@ def weixin_login():
 
     code = request.args.get("code")
     if not code:
-        return jsonify(status="error", message="Code not found")
+        return redirect(f"/#/wx/error?error=2")
 
     appid = Config.WEIXIN_APPID
     secret = Config.WEIXIN_APPSECRET
@@ -51,7 +51,7 @@ def weixin_login():
 
     weixin = Weixin.query.filter_by(openid=openid).first()
     if not weixin:
-        return jsonify(status="error", message="User not found")
+        return redirect(f"/#/wx/error?error=1")
 
     if weixin.role == 0:
         user_id = weixin.attach
@@ -114,11 +114,11 @@ def weixin_bind():
         token = request.args.get("state")
         claims = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=["HS256"])
     except:
-        return jsonify(status="error", message="Error token")
+        return redirect(f"/#/wx/error?error=2")
 
     code = request.args.get("code")
     if not code:
-        return jsonify(status="error", message="Code not found")
+        return redirect(f"/#/wx/error?error=2")
 
     appid = Config.WEIXIN_APPID
     secret = Config.WEIXIN_APPSECRET
