@@ -51,13 +51,16 @@ def weixin_login():
     res = res.json()
     openid = res.get("openid")
 
+    if not openid:
+        return redirect(f"/#/wx/error?error=3")
+
     weixin = Weixin.query.filter_by(openid=openid).first()
     if not weixin:
         return redirect(f"/#/wx/error?error=1")
 
     if weixin.role == 0:
         user_id = weixin.attach
-        user = User.query.filter_by(openid=user_id).first()
+        user = User.query.filter_by(id=user_id).first()
 
         user.last_login = db.func.now()
         db.session.commit()
@@ -69,7 +72,7 @@ def weixin_login():
         role = 0
     else:
         access_token = create_access_token(
-            identity=openid, additional_claims={"type": 1, "attach": weixin.attach}
+            identity=weixin.attach, additional_claims={"type": 1}
         )
 
         role = 1
@@ -118,8 +121,7 @@ def weixin_bind():
     try:
         token = unquote(request.args.get("state"))
         claims = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=["HS256"])
-    except Exception as e:
-        print(e)
+    except:
         return redirect(f"/#/wx/error?error=2")
 
     code = request.args.get("code")
