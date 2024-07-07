@@ -9,6 +9,7 @@ import requests
 from config import Config
 from urllib.parse import unquote
 import hashlib
+import base64
 
 weixin_bp = Blueprint("weixin", __name__)
 
@@ -99,8 +100,11 @@ def weixin_create():
         if not student:
             return jsonify(status="error", message="Student not found")
 
+    print(Config.JWT_SECRET_KEY, {"attach": attach, "role": role})
     token = jwt.encode(
-        {"attach": attach, "role": role}, Config.JWT_SECRET_KEY, algorithm="HS256"
+        {"attach": attach, "role": role},
+        Config.JWT_SECRET_KEY,
+        algorithm="HS256",
     )
 
     return jsonify(status="ok", data={"token": token})
@@ -114,7 +118,8 @@ def weixin_bind():
     try:
         token = unquote(request.args.get("state"))
         claims = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=["HS256"])
-    except:
+    except Exception as e:
+        print(e)
         return redirect(f"/#/wx/error?error=2")
 
     code = request.args.get("code")
@@ -127,15 +132,16 @@ def weixin_bind():
     url = f"https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code"
     res = requests.get(url)
     res = res.json()
-    openid = res.get("openid")
+    openid = res.get("openid", None)
+
+    if not openid:
+        return redirect(f"/#/wx/error?error=3")
 
     attach = claims.get("attach")
     role = claims.get("role")
 
     Weixin.query.filter_by(openid=openid).delete()
     Weixin.query.filter_by(attach=attach).delete()
-
-    print(openid, role, attach)
 
     weixin = Weixin(openid=openid, role=role, attach=attach)
     db.session.add(weixin)
