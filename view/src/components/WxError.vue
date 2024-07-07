@@ -1,5 +1,5 @@
 <script setup>
-import { useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 
 const route = useRoute();
 

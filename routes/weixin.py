@@ -44,7 +44,7 @@ def weixin_login():
     appid = Config.WEIXIN_APPID
     secret = Config.WEIXIN_APPSECRET
 
-    url = f"https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&js_code={code}&grant_type=authorization_code"
+    url = f"https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code"
     res = requests.get(url)
     res = res.json()
     openid = res.get("openid")
@@ -123,7 +123,7 @@ def weixin_bind():
     appid = Config.WEIXIN_APPID
     secret = Config.WEIXIN_APPSECRET
 
-    url = f"https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&js_code={code}&grant_type=authorization_code"
+    url = f"https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code"
     res = requests.get(url)
     res = res.json()
     openid = res.get("openid")
