@@ -89,7 +89,7 @@ def weixin_create():
 
         from models.user import User
 
-        user = User.query.filter_by(openid=attach).first()
+        user = User.query.filter_by(id=attach).first()
         if not user:
             return jsonify(status="error", message="User not found")
     elif role == 1:
@@ -134,6 +134,8 @@ def weixin_bind():
 
     Weixin.query.filter_by(openid=openid).delete()
     Weixin.query.filter_by(attach=attach).delete()
+
+    print(openid, role, attach)
 
     weixin = Weixin(openid=openid, role=role, attach=attach)
     db.session.add(weixin)
