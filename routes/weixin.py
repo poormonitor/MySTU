@@ -31,14 +31,14 @@ def weixin_index():
     return tmp_str == signature
 
 
-@weixin_bp.route("/wx/login", methods=["POST"])
+@weixin_bp.route("/wx/login", methods=["GET"])
 @jwt_required()
 def weixin_login():
     from models.weixin import Weixin
     from models.user import User
     from models import db
 
-    code = request.json.get("code")
+    code = request.args.get("code")
     if not code:
         return jsonify(status="error", message="Code not found")
 
