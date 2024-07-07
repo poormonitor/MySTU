@@ -1,5 +1,5 @@
 <script setup>
-import { useRoute } from "vue-router";
+import { useRoute, onMounted } from "vue-router";
 
 const route = useRoute();
 

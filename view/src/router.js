@@ -90,10 +90,15 @@ const routes = [
                 component: () => import("./components/WxStudent.vue"),
             },
             {
+                name: "wx-bind",
+                path: "bind",
+                component: () => import("./components/WxBind.vue"),
+            },
+            {
                 name: "wx-error",
                 path: "error",
                 component: () => import("./components/WxError.vue"),
-            }
+            },
         ],
     },
 ];

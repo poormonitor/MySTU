@@ -7,6 +7,7 @@ from flask_jwt_extended import (
 import jwt
 import requests
 from config import Config
+from urllib.parse import unquote
 import hashlib
 
 weixin_bp = Blueprint("weixin", __name__)
@@ -71,7 +72,7 @@ def weixin_login():
         )
 
         role = 1
-    
+
     return redirect(f"/#/wx/welcome?token={access_token}&role={role}")
 
 
@@ -111,7 +112,7 @@ def weixin_bind():
     from models import db
 
     try:
-        token = request.args.get("state")
+        token = unquote(request.args.get("state"))
         claims = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=["HS256"])
     except:
         return redirect(f"/#/wx/error?error=2")

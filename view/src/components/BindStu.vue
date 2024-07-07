@@ -29,10 +29,8 @@ watch(visible, (value) => {
                 },
             })
             .then((response) => {
-                url.value =
-                    location.origin +
-                    "/#/wx/bind?token=" +
-                    response.data.data.token;
+                let token = encodeURIComponent(response.data.data.token);
+                url.value = location.origin + "/#/wx/bind?token=" + token;
             });
     }
 });
