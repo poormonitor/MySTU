@@ -3,8 +3,8 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 
-const appid = "wx7514e8b1667e4858";
-const appsecret = "aab0176c082b20f32c276ccaf658ba68";
+const appid = import.meta.env.VITE_APPID;
+const appsecret = import.meta.env.VITE_APPSECRET;
 
 const failed = ref(false);
 

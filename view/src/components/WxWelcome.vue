@@ -3,8 +3,8 @@ import { useRouter, useRoute } from "vue-router";
 import { ref } from "vue";
 import axios from "../axios";
 
-const appid = "wx7514e8b1667e4858";
-const appsecret = "aab0176c082b20f32c276ccaf658ba68";
+const appid = import.meta.env.VITE_APPID;
+const appsecret = import.meta.env.VITE_APPSECRET;
 
 const router = useRouter();
 const route = useRoute();
