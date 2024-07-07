@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, redirect
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
@@ -65,16 +65,15 @@ def weixin_login():
             identity=user.id, additional_claims={"type": 0}
         )
 
-        return jsonify(
-            status="ok",
-            data={"access_token": access_token, "type": 0},
-        )
+        role = 0
     else:
         access_token = create_access_token(
             identity=openid, additional_claims={"type": 1, "attach": weixin.attach}
         )
 
-        return jsonify(status="ok", data={"access_token": access_token, "type": 1})
+        role = 1
+    
+    return redirect(f"/#/wx/welcome?token={access_token}&role={role}")
 
 
 @weixin_bp.route("/wx/create", methods=["GET"])
@@ -107,18 +106,18 @@ def weixin_create():
     return jsonify(status="ok", data={"token": token})
 
 
-@weixin_bp.route("/wx/bind", methods=["POST"])
+@weixin_bp.route("/wx/bind", methods=["GET"])
 def weixin_bind():
     from models.weixin import Weixin
     from models import db
 
     try:
-        token = request.json.get("token")
+        token = request.args.get("state")
         claims = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=["HS256"])
     except:
         return jsonify(status="error", message="Error token")
 
-    code = request.json.get("code")
+    code = request.args.get("code")
     if not code:
         return jsonify(status="error", message="Code not found")
 
@@ -140,4 +139,4 @@ def weixin_bind():
     db.session.add(weixin)
     db.session.commit()
 
-    return jsonify(status="ok", data={"openid": openid, "attach": attach, "role": role})
+    return redirect(f"/#/wx/welcome")
