@@ -32,7 +32,6 @@ def weixin_index():
 
 
 @weixin_bp.route("/wx/login", methods=["GET"])
-@jwt_required()
 def weixin_login():
     from models.weixin import Weixin
     from models.user import User
