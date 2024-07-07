@@ -13,9 +13,9 @@ if (token) {
     else router.push({ name: "wx-student" });
 }
 
-if (route.params.token) {
-    let token = route.params.token;
-    let role = route.params.role;
+if (route.query.token) {
+    let token = route.query.token;
+    let role = route.query.role;
     sessionStorage.setItem("token_mystu", token);
     sessionStorage.setItem("role_mystu", role);
     if (role == 0) router.push({ name: "wx-teacher" });

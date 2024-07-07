@@ -7,7 +7,8 @@ const appid = import.meta.env.VITE_APPID;
 
 let current_url = location.origin + "/api/wx/bind";
 current_url = encodeURIComponent(current_url);
-let token = encodeURIComponent(route.params.token);
+let token = encodeURIComponent(route.query.token);
+console.log(token);
 window.location.href =
     "https://open.weixin.qq.com/connect/oauth2/authorize?" +
     `appid=${appid}` +

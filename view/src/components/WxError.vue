@@ -10,8 +10,8 @@ const info = {
 };
 
 onMounted(() => {
-    if (route.params.error) {
-        alert(info[route.params.error]);
+    if (route.query.error) {
+        alert(info[Number(route.query.error)]);
     }
 });
 </script>
