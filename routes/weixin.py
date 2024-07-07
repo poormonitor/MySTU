@@ -1,11 +1,11 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import (
     create_access_token,
-    get_jwt,
     jwt_required,
     get_jwt_identity,
 )
 import jwt
+import requests
 from config import Config
 import hashlib
 
@@ -38,9 +38,17 @@ def weixin_login():
     from models.user import User
     from models import db
 
-    openid = request.json.get("openid")
-    if not openid:
-        return "error"
+    code = request.json.get("code")
+    if not code:
+        return jsonify(status="error", message="Code not found")
+
+    appid = Config.WEIXIN_APPID
+    secret = Config.WEIXIN_APPSECRET
+
+    url = f"https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&js_code={code}&grant_type=authorization_code"
+    res = requests.get(url)
+    res = res.json()
+    openid = res.get("openid")
 
     weixin = Weixin.query.filter_by(openid=openid).first()
     if not weixin:
@@ -110,7 +118,18 @@ def weixin_bind():
     except:
         return jsonify(status="error", message="Error token")
 
-    openid = request.json.get("openid")
+    code = request.json.get("code")
+    if not code:
+        return jsonify(status="error", message="Code not found")
+
+    appid = Config.WEIXIN_APPID
+    secret = Config.WEIXIN_APPSECRET
+
+    url = f"https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&js_code={code}&grant_type=authorization_code"
+    res = requests.get(url)
+    res = res.json()
+    openid = res.get("openid")
+
     attach = claims.get("attach")
     role = claims.get("role")
 

@@ -4,7 +4,6 @@ import { ref } from "vue";
 import axios from "../axios";
 
 const appid = import.meta.env.VITE_APPID;
-const appsecret = import.meta.env.VITE_APPSECRET;
 
 const router = useRouter();
 const route = useRoute();
@@ -30,29 +29,17 @@ if (!token || route.params.code) {
 }
 
 if (route.params.code) {
-    axios({
-        method: "get",
-        url: "https://api.weixin.qq.com/sns/oauth2/access_token",
-        params: {
-            code: route.params.code,
-            appid: appid,
-            secret: appsecret,
-            grant_type: "authorization_code",
-        },
-    }).then((response) => {
-        let open_id = response.data.open_id;
-        axios.post("/wx/login", { openid: open_id }).then((response) => {
-            if (response.data.status == "ok") {
-                let token = response.data.data.access_token;
-                let role = response.data.data.role;
-                sessionStorage.setItem("token_mystu", token);
-                sessionStorage.setItem("role_mystu", role);
-                if (role == 0) router.push({ name: "wx-teacher" });
-                else router.push({ name: "wx-student" });
-            } else {
-                failed.value = true;
-            }
-        });
+    axios.post("/wx/login", { code: route.params.route }).then((response) => {
+        if (response.data.status == "ok") {
+            let token = response.data.data.access_token;
+            let role = response.data.data.role;
+            sessionStorage.setItem("token_mystu", token);
+            sessionStorage.setItem("role_mystu", role);
+            if (role == 0) router.push({ name: "wx-teacher" });
+            else router.push({ name: "wx-student" });
+        } else {
+            failed.value = true;
+        }
     });
 }
 </script>

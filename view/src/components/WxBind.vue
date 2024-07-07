@@ -1,7 +1,8 @@
 <script setup>
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
+const router = useRouter();
 
 const appid = import.meta.env.VITE_APPID;
 const appsecret = import.meta.env.VITE_APPSECRET;
@@ -22,32 +23,18 @@ if (!route.params.code) {
         "#wechat_redirect";
 } else {
     axios({
-        method: "get",
-        url: "https://api.weixin.qq.com/sns/oauth2/access_token",
-        params: {
+        method: "post",
+        url: "/wx/bind",
+        data: {
             code: route.params.code,
-            appid: appid,
-            secret: appsecret,
-            grant_type: "authorization_code",
+            access_token: token,
         },
     }).then((response) => {
-        let open_id = response.data.open_id;
-        let token = route.params.state;
-
-        axios({
-            method: "post",
-            url: "/wx/bind",
-            data: {
-                openid: open_id,
-                access_token: token,
-            },
-        }).then((response) => {
-            if (response.data.status == "ok") {
-                router.push({ name: "wx-welcome" });
-            } else {
-                failed.value = true;
-            }
-        });
+        if (response.data.status == "ok") {
+            router.push({ name: "wx-welcome" });
+        } else {
+            failed.value = true;
+        }
     });
 }
 </script>
