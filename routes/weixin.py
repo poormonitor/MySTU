@@ -99,11 +99,15 @@ def weixin_create():
 
         timestamp = timestamp + 24 * 60 * 60
 
+    timestamp = int(timestamp)
+
     token = jwt.encode(
         {"attach": attach, "role": role, "exp": timestamp},
         Config.JWT_SECRET_KEY,
         algorithm="HS256",
     )
+
+    token = ".".join(token.split(".")[1:])
 
     return jsonify(status="ok", data={"token": token, "attached": attached})
 
@@ -115,6 +119,8 @@ def weixin_bind():
 
     try:
         token = unquote(request.args.get("state"))
+        header = base64.b64encode(json.dumps({"alg": "HS256", "typ": "JWT"}).encode())
+        token = header.decode() + "." + token
         claims = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=["HS256"])
     except:
         return redirect(f"/#/wx/error?error=2")
