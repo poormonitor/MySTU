@@ -204,7 +204,7 @@ const switchInfo = (cls, id) => {
 }
 </style>
 
-<style scoped>
+<style>
 .t-tabs__nav-container {
     margin-left: 7rem;
 }
