@@ -209,7 +209,7 @@ def weixin_add():
     if weixin:
         return redirect(f"/#/wx/error?error=7")
 
-    student = Student.query.filter_by(sid=sid).first()
+    student = Student.query.filter_by(id=sid).first()
     if not student:
         return redirect(f"/#/wx/error?error=5")
 

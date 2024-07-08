@@ -1,8 +1,9 @@
 <script setup>
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { onMounted } from "vue";
 
 const route = useRoute();
+const router = useRouter();
 
 const info = {
     1: "您没有绑定，请联系辅导员/系统管理员",
@@ -18,6 +19,14 @@ const info = {
 onMounted(() => {
     if (route.query.error) {
         alert(info[Number(route.query.error)]);
+
+        switch (Number(route.query.error)) {
+            case 1:
+            case 5:
+            case 6:
+                router.push({ name: "wx-add" });
+                break;
+        }
     }
 });
 </script>
