@@ -80,42 +80,44 @@ const data4 = computed(() => processData(columns4, studentRecord.value.award));
 </script>
 
 <template>
-    <div class="mx-10 my-10">
-        <p class="text-sm text-neutral-600 mb-8">
-            更新时间: {{ studentRecord.last_update }}
-        </p>
-        <div class="flex flex-col gap-y-8 md:gap-y-12">
-            <div>
-                <h3 class="mx-2 mb-1 text-lg font-bold">学分信息</h3>
-                <t-base-table
-                    row-key="index"
-                    :columns="columns1"
-                    :data="data1"
-                />
-            </div>
-            <div>
-                <h3 class="mx-2 mb-1 text-lg font-bold">不及格课程</h3>
-                <t-base-table
-                    row-key="index"
-                    :columns="columns2"
-                    :data="data2"
-                />
-            </div>
-            <div>
-                <h3 class="mx-2 mb-1 text-lg font-bold">考勤记录</h3>
-                <t-base-table
-                    row-key="index"
-                    :columns="columns3"
-                    :data="data3"
-                />
-            </div>
-            <div>
-                <h3 class="mx-2 mb-1 text-lg font-bold">奖惩记录</h3>
-                <t-base-table
-                    row-key="index"
-                    :columns="columns4"
-                    :data="data4"
-                />
+    <div class="contentHeight overflow-y-auto">
+        <div class="px-10 pb-10 pt-6 md:pt-12">
+            <p class="text-sm text-neutral-600 mb-8">
+                更新时间: {{ studentRecord.last_update }}
+            </p>
+            <div class="flex flex-col gap-y-8 md:gap-y-12">
+                <div>
+                    <h3 class="mb-1 text-lg font-bold">学分信息</h3>
+                    <t-base-table
+                        row-key="index"
+                        :columns="columns1"
+                        :data="data1"
+                    />
+                </div>
+                <div>
+                    <h3 class="mb-1 text-lg font-bold">不及格课程</h3>
+                    <t-base-table
+                        row-key="index"
+                        :columns="columns2"
+                        :data="data2"
+                    />
+                </div>
+                <div>
+                    <h3 class="mb-1 text-lg font-bold">考勤记录</h3>
+                    <t-base-table
+                        row-key="index"
+                        :columns="columns3"
+                        :data="data3"
+                    />
+                </div>
+                <div>
+                    <h3 class="mb-1 text-lg font-bold">奖惩记录</h3>
+                    <t-base-table
+                        row-key="index"
+                        :columns="columns4"
+                        :data="data4"
+                    />
+                </div>
             </div>
         </div>
     </div>
