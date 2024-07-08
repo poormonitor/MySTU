@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request, make_response
 from flask_jwt_extended import jwt_required, get_jwt, get_current_user
+from const import datetime_to_str
 
 
 list_bp = Blueprint("list", __name__)
@@ -133,14 +134,21 @@ def getStudentRecord():
 
     record = Record.query.filter_by(id=sid).first()
 
-    empty = {"score": [0, 0, 0], "unqualified": [], "attendance": [], "award": []}
+    empty = {
+        "score": [0, 0, 0],
+        "unqualified": [],
+        "attendance": [],
+        "award": [],
+    }
 
     if not record:
-        record = empty
+        data = empty
     else:
-        record = {i: json.loads(j) for i, j in record.to_dict().items() if i in empty}
+        data = {i: json.loads(j) for i, j in record.to_dict().items() if i in empty}
 
-    return jsonify(status="ok", data={"studentRecord": record})
+    data["last_update"] = datetime_to_str(record.last_update) if record else "未知"
+
+    return jsonify(status="ok", data={"studentRecord": data})
 
 
 @list_bp.route("/logs")
