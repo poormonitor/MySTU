@@ -20,7 +20,7 @@ def admin_required(f):
 
 
 @manage_bp.route("/passwd", methods=["POST"])
-@jwt_required()
+@jwt_required(fresh=True)
 def passwd():
     from bcrypt import checkpw, gensalt, hashpw
 
@@ -39,7 +39,7 @@ def passwd():
 
 
 @manage_bp.route("/admin/user")
-@jwt_required()
+@jwt_required(fresh=True)
 @admin_required
 def getUsers():
     from const import datetime_to_str
@@ -57,7 +57,7 @@ def getUsers():
 
 
 @manage_bp.route("/admin/admin", methods=["POST"])
-@jwt_required()
+@jwt_required(fresh=True)
 @admin_required
 def switchAdmin():
     data = request.get_json()
@@ -71,7 +71,7 @@ def switchAdmin():
 
 
 @manage_bp.route("/admin/passwd", methods=["POST"])
-@jwt_required()
+@jwt_required(fresh=True)
 @admin_required
 def editPasswd():
     from bcrypt import gensalt, hashpw
@@ -87,7 +87,7 @@ def editPasswd():
 
 
 @manage_bp.route("/admin/new", methods=["POST"])
-@jwt_required()
+@jwt_required(fresh=True)
 @admin_required
 def newUser():
     from bcrypt import gensalt, hashpw
@@ -107,7 +107,7 @@ def newUser():
 
 
 @manage_bp.route("/admin/delete", methods=["POST"])
-@jwt_required()
+@jwt_required(fresh=True)
 @admin_required
 def deleteUser():
     data = request.get_json()
@@ -122,7 +122,7 @@ def deleteUser():
 
 
 @manage_bp.route("/admin/upload", methods=["POST"])
-@jwt_required()
+@jwt_required(fresh=True)
 @admin_required
 def upload():
     from tempfile import NamedTemporaryFile
@@ -140,7 +140,7 @@ def upload():
 
 
 @manage_bp.route("/admin/image", methods=["POST"])
-@jwt_required()
+@jwt_required(fresh=True)
 @admin_required
 def image():
     import os
@@ -161,7 +161,7 @@ def image():
 
 
 @manage_bp.route("/admin/delete/class", methods=["POST"])
-@jwt_required()
+@jwt_required(fresh=True)
 @admin_required
 def delete_class():
     from models.student import Student
@@ -186,7 +186,7 @@ def delete_class():
 
 
 @manage_bp.route("/admin/delete/student", methods=["POST"])
-@jwt_required()
+@jwt_required(fresh=True)
 @admin_required
 def delete_student():
     from models.student import Student

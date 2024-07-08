@@ -5,7 +5,7 @@ submit_bp = Blueprint("submit", __name__)
 
 
 @submit_bp.route("/submit", methods=["POST"])
-@jwt_required()
+@jwt_required(fresh=True)
 def submitLog():
     from models.log import Log
     from models import db
@@ -19,7 +19,7 @@ def submitLog():
 
 
 @submit_bp.route("/memo", methods=["POST"])
-@jwt_required()
+@jwt_required(fresh=True)
 def submitMemo():
     from models.student import Student
     from models import db
@@ -35,7 +35,7 @@ def submitMemo():
 
 
 @submit_bp.route("/edit", methods=["POST"])
-@jwt_required()
+@jwt_required(fresh=True)
 def editStudent():
     from models.student import Student
     from models import db

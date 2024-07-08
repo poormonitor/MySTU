@@ -103,7 +103,7 @@ const routes = [
                 name: "wx-add",
                 path: "add",
                 component: () => import("./components/WxAdd.vue"),
-            }
+            },
         ],
     },
 ];
@@ -117,16 +117,20 @@ router.beforeEach((to, from) => {
     if (to.meta.title) {
         document.title = to.meta.title;
     }
+
     if (!to.meta.weixin && isWeixin()) {
         return { path: "/wx/welcome" };
     }
+
     let token = sessionStorage.getItem("access_token_mystu");
     let admin = JSON.parse(sessionStorage.getItem("admin_mystu"));
-    if ((!to.meta.requiresAuth && token) || (to.meta.requireAdmin && !admin)) {
+    
+    if (to.meta.requireAdmin && !admin) {
         return {
             path: "/",
         };
     }
+
     if (to.meta.requiresAuth && !token) {
         return {
             path: "/login",

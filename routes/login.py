@@ -28,7 +28,9 @@ def login():
     db.session.commit()
 
     access_token = create_access_token(
-        identity=uid, additional_claims={"admin": result.admin, "name": result.name}
+        identity=uid,
+        additional_claims={"admin": result.admin, "name": result.name},
+        fresh=True,
     )
 
     return jsonify(

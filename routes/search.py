@@ -6,7 +6,7 @@ search_bp = Blueprint("search", __name__)
 
 
 @search_bp.route("/search")
-@jwt_required()
+@jwt_required(fresh=True)
 def search():
     from models.student import Student
     from models import db

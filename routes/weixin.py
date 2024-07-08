@@ -51,13 +51,13 @@ def weixin_login():
         db.session.commit()
 
         access_token = create_access_token(
-            identity=user.id, additional_claims={"type": 0}
+            fresh=True, identity=user.id, additional_claims={"weixin": True, "type": 0}
         )
 
         role = 0
     else:
         access_token = create_access_token(
-            identity=weixin.attach, additional_claims={"type": 1}
+            identity=weixin.attach, additional_claims={"weixin": True, "type": 1}
         )
 
         role = 1
@@ -66,7 +66,7 @@ def weixin_login():
 
 
 @weixin_bp.route("/wx/create", methods=["GET"])
-@jwt_required()
+@jwt_required(fresh=True)
 def weixin_create():
     from models.weixin import Weixin
 

@@ -5,7 +5,7 @@ const appid = import.meta.env.VITE_APPID;
 
 const router = useRouter();
 const route = useRoute();
-const token = sessionStorage.getItem("token_mystu");
+const token = sessionStorage.getItem("access_token_mystu");
 
 if (token) {
     let role = sessionStorage.getItem("role_mystu");
@@ -16,7 +16,7 @@ if (token) {
 if (route.query.token) {
     let token = route.query.token;
     let role = route.query.role;
-    sessionStorage.setItem("token_mystu", token);
+    sessionStorage.setItem("access_token_mystu", token);
     sessionStorage.setItem("role_mystu", role);
     if (role == 0) router.push({ name: "wx-teacher" });
     else router.push({ name: "wx-student" });

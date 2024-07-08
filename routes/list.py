@@ -6,7 +6,7 @@ list_bp = Blueprint("list", __name__)
 
 
 @list_bp.route("/classes")
-@jwt_required()
+@jwt_required(fresh=True)
 def getClasses():
     from datetime import timedelta, datetime
     from models.student import Student
@@ -43,7 +43,7 @@ def getClasses():
 
 
 @list_bp.route("/students")
-@jwt_required()
+@jwt_required(fresh=True)
 def getStudents():
     from datetime import timedelta, datetime
     from models.log import Log
@@ -102,7 +102,7 @@ def getStudents():
 
 
 @list_bp.route("/student")
-@jwt_required()
+@jwt_required(fresh=True)
 def getStudentInfo():
     from models.student import Student
     from models.weixin import Weixin
@@ -118,7 +118,7 @@ def getStudentInfo():
 
 
 @list_bp.route("/logs")
-@jwt_required()
+@jwt_required(fresh=True)
 def getLogs():
     from models.log import Log
     from models.user import User
@@ -149,7 +149,7 @@ def getLogs():
 
 
 @list_bp.route("/record")
-@jwt_required()
+@jwt_required(fresh=True)
 def getLog():
     from models.log import Log
     from const import datetime_to_str
@@ -164,7 +164,7 @@ def getLog():
 
 
 @list_bp.route("/pic")
-@jwt_required()
+@jwt_required(fresh=True)
 def getPic():
     from base64 import b64encode
 
