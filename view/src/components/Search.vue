@@ -35,7 +35,7 @@ const gotoStudent = (cls, id) => {
 
 <template>
     <t-dialog placement="center">
-        <p class="text-xl font-bold text-black mb-3"> 搜索 </p>
+        <p class="text-xl font-bold text-black mb-4"> 搜索 </p>
         <t-input v-model="searchKeyword" size="large" clearable placeholder="按 Enter 搜索" @enter="updateResult" />
         <div class="mt-6">
             <div class="py-2 px-5 transition hover:bg-slate-200 rounded-2xl cursor-pointer select-none"

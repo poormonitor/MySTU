@@ -1,6 +1,10 @@
 <script setup>
-import { ref } from "vue";
-import { FileCopyIcon, UsergroupIcon } from "tdesign-icons-vue-next";
+import { ref, computed } from "vue";
+import {
+    FileCopyIcon,
+    SearchIcon,
+    UsergroupIcon,
+} from "tdesign-icons-vue-next";
 import { useRouter } from "vue-router";
 import LogModule from "../components/LogModule.vue";
 import InfoModule from "./InfoModule.vue";
@@ -14,9 +18,11 @@ if (!token || role !== "0") {
     router.push({ name: "wx-welcome" });
 }
 
-const options = ref([]);
+const SearchVisible = ref(false);
 
 const studentsData = ref([]);
+const classesData = ref([]);
+const currentClass = ref(null);
 const currentStudent = ref(null);
 const currentData = ref(null);
 const currentTab = ref(1);
@@ -24,13 +30,7 @@ const imgItem = ref(false);
 const studentRenderKey = ref(0);
 
 axios.get("/classes").then((response) => {
-    options.value = response.data.data.clsList.map((item) => {
-        return {
-            value: item.id,
-            label: item.name,
-            children: true,
-        };
-    });
+    classesData.value = response.data.data.clsList;
 });
 
 const fetchStudentPic = () => {
@@ -53,46 +53,87 @@ const fetchStudentPic = () => {
 
 const handleSelect = (studentid) => {
     imgItem.value = false;
-    currentStudent.value = studentid;
     currentData.value = studentsData.value.find((item) => item.id == studentid);
     currentTab.value = 1;
     fetchStudentPic();
 };
 
-const load = (node) => {
-    return new Promise((resolve) => {
-        if (node.level === 0) {
-            axios
-                .get("/students", {
-                    params: {
-                        class: node.value,
-                    },
-                })
-                .then((response) => {
-                    studentsData.value = response.data.data.stuList;
-                    let data = response.data.data.stuList.map((item) => {
-                        return {
-                            value: item.id,
-                            label: item.name,
-                        };
-                    });
-                    resolve(data);
-                });
-        }
+const handleSelectClass = () => {
+    fetchClass();
+};
+
+const fetchClass = async () => {
+    return axios
+        .get("/students", {
+            params: {
+                class: currentClass.value,
+            },
+        })
+        .then((response) => {
+            studentsData.value = response.data.data.stuList;
+        });
+};
+
+const options = computed(() => {
+    return studentsData.value.map((item) => {
+        return {
+            value: item.id,
+            label: item.name,
+        };
     });
+});
+
+const classesOptions = computed(() => {
+    return classesData.value.map((item) => {
+        return {
+            value: item.id,
+            label: item.name,
+        };
+    });
+});
+
+const switchInfo = (cls, id) => {
+    let clsid = classesData.value.find((item) => item.name == cls).id;
+    currentClass.value = clsid;
+    fetchClass().then(() => {
+        currentStudent.value = id;
+        handleSelect(id);
+    });
+    SearchVisible.value = false;
 };
 </script>
 
 <template>
-    <div class="py-2 px-6 h-14">
+    <div
+        class="z-10 cursor-pointer border-2 border-gray-200 transition bg-white hover:bg-slate-100 shadow-lg hover:shadow-xl rounded-full absolute bottom-3 right-3 p-4 text-black"
+        @click="SearchVisible = true"
+    >
+        <div class="flex justify-items-center items-center">
+            <SearchIcon class="text-black" name="search"></SearchIcon>
+        </div>
+    </div>
+
+    <Search
+        v-model:visible="SearchVisible"
+        @updateInfo="switchInfo"
+        @confirm="SearchVisible = false"
+    />
+
+    <div class="py-2 px-6 h-14 flex justify-center">
         <t-form>
             <t-form-item label="选择学生">
-                <t-cascader
-                    v-model="currentStudent"
-                    :options="options"
-                    :load="load"
-                    @change="handleSelect"
-                />
+                <div class="flex gap-x-4">
+                    <t-select
+                        :options="classesOptions"
+                        v-model="currentClass"
+                        @change="handleSelectClass"
+                    ></t-select>
+                    <t-select
+                        v-model="currentStudent"
+                        :options="options"
+                        @change="handleSelect"
+                    ></t-select>
+                </div>
             </t-form-item>
         </t-form>
     </div>

@@ -91,20 +91,20 @@ onMounted(() => {
 </script>
 
 <template>
+    <Search
+        v-model:visible="SearchVisible"
+        @updateInfo="switchInfo"
+        @confirm="SearchVisible = false"
+    />
+    <EditStudent
+        v-model="userEditVisible"
+        :student="currentStudent"
+        @after="updateCls"
+        @refresh="studentRenderKey++"
+        v-if="userEditVisible"
+    />
+    <BindStu :user="currentStudent" v-model="userBindVisible" />
     <div class="flex divide-x-2 h-full overflow-x-auto overflow-y-hidden">
-        <Search
-            v-model:visible="SearchVisible"
-            @updateInfo="switchInfo"
-            @confirm="SearchVisible = false"
-        />
-        <EditStudent
-            v-model="userEditVisible"
-            :student="currentStudent"
-            @after="updateCls"
-            @refresh="studentRenderKey++"
-            v-if="userEditVisible"
-        />
-        <BindStu :user="currentStudent" v-model="userBindVisible" />
         <div
             id="classOption"
             class="flex grow-0 shrink-0 w-48 overflow-x-hidden"
