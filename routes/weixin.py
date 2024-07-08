@@ -8,77 +8,11 @@ import jwt
 import requests
 from config import Config
 from urllib.parse import unquote
+import base64
+import json
 import datetime
-from wechatpy.utils import check_signature
-from wechatpy.exceptions import InvalidSignatureException
-from wechatpy import parse_message
-from wechatpy.replies import TextReply
 
 weixin_bp = Blueprint("weixin", __name__)
-
-
-def weixin_verify():
-    try:
-        signature = request.args.get("signature")
-        timestamp = request.args.get("timestamp")
-        nonce = request.args.get("nonce")
-        echostr = request.args.get("echostr")
-        token = Config.WEIXIN_TOKEN
-
-        check_signature(token, signature, timestamp, nonce)
-        return echostr
-    except InvalidSignatureException:
-        return "Invalid signature"
-
-
-def weixin_message():
-    xml = request.data
-    msg = parse_message(xml)
-    openid = msg.source
-    msgtype = msg.type
-
-    if msgtype == "text":
-        content = msg.content
-        content = content.split(" ")
-
-        if content[0] == "绑定":
-            sid = content[1]
-            phone = content[2]
-
-            from models.student import Student
-
-            student = Student.query.filter_by(sid=sid).first()
-            if not student:
-                reply = TextReply(content="学号不存在", message=msg)
-                return reply.render()
-
-            if phone != student.fcontact1phone or phone != student.fcontact2phone:
-                reply = TextReply(content="手机号错误", message=msg)
-                return reply.render()
-
-            from models.weixin import Weixin
-            from models import db
-
-            Weixin.query.filter_by(openid=openid).delete()
-            Weixin.query.filter_by(attach=student.id).delete()
-
-            weixin = Weixin(openid=openid, role=1, attach=student.id)
-            db.session.add(weixin)
-            db.session.commit()
-
-            content = "绑定成功"
-            reply = TextReply(content=content, message=msg)
-            return reply.render()
-
-        return "success"
-
-
-@weixin_bp.route("/wx", methods=["GET", "POST"])
-def weixin_index():
-    if request.method == "GET":
-        return weixin_verify()
-    else:
-        return weixin_message()
 
 
 @weixin_bp.route("/wx/login", methods=["GET"])
@@ -105,6 +39,9 @@ def weixin_login():
     weixin = Weixin.query.filter_by(openid=openid).first()
     if not weixin:
         return redirect(f"/#/wx/error?error=1")
+
+    weixin.last_login = db.func.now()
+    db.session.commit()
 
     if weixin.role == 0:
         user_id = weixin.attach
@@ -190,6 +127,17 @@ def weixin_bind():
     if not code:
         return redirect(f"/#/wx/error?error=2")
 
+    attach = claims.get("attach")
+    role = claims.get("role")
+
+    weixin = Weixin.query.filter_by(attach=attach, role=role).first()
+    if weixin:
+        return redirect(f"/#/wx/error?error=7")
+
+    weixin = Weixin.query.filter_by(openid=openid).first()
+    if weixin:
+        return redirect(f"/#/wx/error?error=8")
+
     appid = Config.WEIXIN_APPID
     secret = Config.WEIXIN_APPSECRET
 
@@ -197,17 +145,91 @@ def weixin_bind():
     res = requests.get(url)
     res = res.json()
     openid = res.get("openid", None)
+    access_token = res.get("access_token", None)
+
+    url = f"https://api.weixin.qq.com/sns/userinfo?access_token={access_token}&openid={openid}&lang=zh_CN"
+    res = requests.get(url)
+    res = res.json()
+    nickname = res.get("nickname", None)
 
     if not openid:
         return redirect(f"/#/wx/error?error=3")
 
-    attach = claims.get("attach")
-    role = claims.get("role")
+    weixin = Weixin(openid=openid, role=role, attach=attach, nick=nickname)
+    db.session.add(weixin)
+    db.session.commit()
 
-    Weixin.query.filter_by(openid=openid).delete()
-    Weixin.query.filter_by(attach=attach).delete()
+    return redirect(f"/#/wx/welcome")
 
-    weixin = Weixin(openid=openid, role=role, attach=attach)
+
+@weixin_bp.route("/wx/unbind", methods=["GET"])
+@jwt_required()
+def weixin_unbind():
+    from models.weixin import Weixin
+    from models import db
+
+    attach = request.args.get("attach")
+    role = request.args.get("role")
+    weixin = Weixin.query.filter_by(attach=attach, role=role).first()
+    if not weixin:
+        return jsonify(status="error", message="Weixin not found")
+
+    db.session.delete(weixin)
+    db.session.commit()
+
+    return jsonify(status="ok", data={})
+
+
+@weixin_bp.route("/wx/add", methods=["GET"])
+def weixin_add():
+    from models.student import Student
+    from models.weixin import Weixin
+    from models import db
+
+    try:
+        token = unquote(request.args.get("state"))
+        claims = json.loads(base64.b64decode(token).decode())
+    except:
+        return redirect(f"/#/wx/error?error=2")
+
+    code = request.args.get("code")
+    if not code:
+        return redirect(f"/#/wx/error?error=2")
+
+    sid = claims.get("sid")
+    phone = claims.get("phone")
+    attach = sid
+    role = 1
+
+    weixin = Weixin.query.filter_by(attach=attach, role=role).first()
+    if weixin:
+        return redirect(f"/#/wx/error?error=7")
+
+    student = Student.query.filter_by(sid=sid).first()
+    if not student:
+        return redirect(f"/#/wx/error?error=5")
+
+    if phone != student.fcontact1phone or phone != student.fcontact2phone:
+        return redirect(f"/#/wx/error?error=6")
+
+    appid = Config.WEIXIN_APPID
+    secret = Config.WEIXIN_APPSECRET
+
+    url = f"https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code"
+    res = requests.get(url)
+    res = res.json()
+    openid = res.get("openid", None)
+    access_token = res.get("access_token", None)
+
+    if not openid:
+        return redirect(f"/#/wx/error?error=3")
+
+    url = f"https://api.weixin.qq.com/sns/userinfo?access_token={access_token}&openid={openid}&lang=zh_CN"
+    res = requests.get(url)
+    res = res.json()
+    nickname = res.get("nickname", None)
+
+    weixin = Weixin(openid=openid, role=role, attach=attach, nick=nickname)
     db.session.add(weixin)
     db.session.commit()
 

@@ -99,6 +99,11 @@ const routes = [
                 path: "error",
                 component: () => import("./components/WxError.vue"),
             },
+            {
+                name: "wx-add",
+                path: "add",
+                component: () => import("./components/WxAdd.vue"),
+            }
         ],
     },
 ];

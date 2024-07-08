@@ -13,7 +13,7 @@ window.location.href =
     `appid=${appid}` +
     `&redirect_uri=${current_url}` +
     "&response_type=code" +
-    "&scope=snsapi_base" +
+    "&scope=snsapi_userinfo" +
     `&state=${token}` +
     "#wechat_redirect";
 </script>

@@ -35,6 +35,20 @@ const fetchCode = () => {
         });
 };
 
+const unbind = () => {
+    let user = props.user;
+    axios
+        .get("/wx/unbind", {
+            params: {
+                attach: user,
+                role: 1,
+            },
+        })
+        .then(() => {
+            fetchCode();
+        });
+};
+
 watch(visible, (value) => {
     if (value) fetchCode();
 });
@@ -43,9 +57,12 @@ watch(visible, (value) => {
 <template>
     <t-dialog v-model:visible="visible" header="微信绑定">
         <div class="h-[300px] flex flex-col justify-center" v-if="url">
-            <span class="text-center mb-3 text-red-800" v-if="attached">
-                该账户已绑定
-            </span>
+            <div class="text-center mb-3" v-if="attached">
+                <span>该账户已绑定，</span>
+                <span class="text-red-800 cursor-pointer" @click="unbind">
+                    解绑
+                </span>
+            </div>
             <div class="flex justify-center">
                 <qrcode-vue :value="url" :size="200" level="L"></qrcode-vue>
             </div>

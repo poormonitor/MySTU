@@ -6,6 +6,9 @@ class Weixin(db.Model):
     openid = db.Column(db.String(128), primary_key=True)
     role = db.Column(db.Integer, nullable=False)
     attach = db.Column(db.String(32), nullable=False)
+    nick = db.Column(db.String(32), nullable=True)
+    last_login = db.Column(db.DateTime, nullable=True)
+
 
     def __repr__(self):
         return "<Weixin %r>" % self.openid
