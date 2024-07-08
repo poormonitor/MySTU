@@ -29,7 +29,7 @@ axios.get("/wx/info").then((response) => {
             <p>{{ currentStudent }}</p>
         </div>
 
-        <div class="mt-4">
+        <div class="mt-3">
             <RecordModule :student="currentStudent" />
         </div>
     </div>
