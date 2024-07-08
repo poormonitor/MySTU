@@ -80,8 +80,9 @@ const currentUser = sessionStorage.getItem("name_mystu");
             <router-link
                 class="text-xl text-white font-semibold"
                 :to="{ name: 'home' }"
-                >学生管理系统</router-link
             >
+                学生管理系统
+            </router-link>
         </t-space>
         <div class="ml-auto justify-self-end">
             <t-dropdown :options="options" @click="menuHandler">

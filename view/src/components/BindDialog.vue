@@ -15,34 +15,53 @@ const visible = computed({
 });
 
 const url = ref("");
+const attached = ref(false);
+
+const fetchCode = () => {
+    let user = sessionStorage.getItem("user_mystu");
+    let role = 0;
+    url.value = "";
+    axios
+        .get("/wx/create", {
+            params: {
+                attach: user,
+                role: role,
+            },
+        })
+        .then((response) => {
+            let token = encodeURIComponent(response.data.data.token);
+            url.value = location.origin + "/#/wx/bind?token=" + token;
+            attached.value = response.data.data.attached;
+        });
+};
 
 watch(visible, (value) => {
-    if (value) {
-        let user = sessionStorage.getItem("user_mystu");
-        let role = 0;
-        url.value = "";
-        axios
-            .get("/wx/create", {
-                params: {
-                    attach: user,
-                    role: role,
-                },
-            })
-            .then((response) => {
-                let token = encodeURIComponent(response.data.data.token);
-                url.value = location.origin + "/#/wx/bind?token=" + token;
-            });
-    }
+    if (value) fetchCode();
 });
 </script>
 
 <template>
     <t-dialog v-model:visible="visible" header="微信绑定">
-        <div class="mt-6 flex justify-center" v-if="url">
-            <qrcode-vue :value="url" :size="200" level="M"></qrcode-vue>
+        <div class="h-[300px] flex flex-col justify-center" v-if="url">
+            <span class="text-center mb-3 text-red-800" v-if="attached">
+                该账户已绑定
+            </span>
+            <div class="flex justify-center">
+                <qrcode-vue :value="url" :size="200" level="L"></qrcode-vue>
+            </div>
+            <div class="mt-4 flex justify-center">
+                <t-button
+                    size="small"
+                    theme="default"
+                    variant="outline"
+                    @click="fetchCode"
+                >
+                    刷新
+                </t-button>
+            </div>
         </div>
-        <div class="mt-6 flex justify-center" v-else>
-            <t-loading text="正在登录..." size="small"></t-loading>
+        <div class="h-[300px] py-auto flex justify-center" v-else>
+            <t-loading text="正在获取..." size="small"></t-loading>
         </div>
     </t-dialog>
 </template>

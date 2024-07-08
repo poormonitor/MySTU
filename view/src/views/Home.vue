@@ -105,7 +105,10 @@ onMounted(() => {
             v-if="userEditVisible"
         />
         <BindStu :user="currentStudent" v-model="userBindVisible" />
-        <div id="classOption" class="flex min-w-[232px] overflow-x-hidden">
+        <div
+            id="classOption"
+            class="flex grow-0 shrink-0 w-48 overflow-x-hidden"
+        >
             <t-menu theme="light" :value="currentClass" @change="fetchStudents">
                 <t-menu-item v-for="cls in classesData" :value="cls.id">
                     <span> {{ cls.name }} </span>
@@ -122,7 +125,7 @@ onMounted(() => {
         </div>
         <div
             id="studentOption"
-            class="overflow-x-hidden min-w-[232px]"
+            class="overflow-x-hidden grow-0 shrink-0 w-48"
             :class="{ flex: isNumber(currentClass) }"
         >
             <t-menu
