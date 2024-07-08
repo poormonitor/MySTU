@@ -58,7 +58,7 @@ watch(visible, (value) => {
     <t-dialog v-model:visible="visible" header="微信绑定">
         <div class="h-[300px] flex flex-col justify-center" v-if="url">
             <div class="text-center mb-3" v-if="attached">
-                <span>该账户已绑定，</span>
+                <span>该账户已被微信 {{ attached }} 绑定，</span>
                 <span class="text-red-800 cursor-pointer" @click="unbind">
                     解绑
                 </span>

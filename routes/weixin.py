@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, redirect
+from flask import Blueprint, request, jsonify, redirect, current_app
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
@@ -74,7 +74,7 @@ def weixin_create():
     role = int(request.args.get("role"))
 
     weixin = Weixin.query.filter_by(attach=attach, role=role).first()
-    attached = weixin is not None
+    attached = weixin.nick if weixin is not None else False
 
     if role == 0:
         exp = datetime.datetime.now() + datetime.timedelta(minutes=5)
@@ -156,6 +156,8 @@ def weixin_bind():
     res = res.json()
     nickname = res.get("nickname", None)
 
+    current_app.logger.info(f"openid: {openid}, nickname: {nickname}, res: {res}")
+
     if not openid:
         return redirect(f"/#/wx/error?error=3")
 
@@ -212,7 +214,7 @@ def weixin_add():
     student = Student.query.filter_by(id=sid).first()
     if not student:
         return redirect(f"/#/wx/error?error=5")
-    
+
     if phone != student.fcontact1phone and phone != student.fcontact2phone:
         return redirect(f"/#/wx/error?error=6")
 
