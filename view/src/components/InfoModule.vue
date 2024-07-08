@@ -24,9 +24,7 @@ const fetchStudentInfo = (student) => {
         .then((response) => {
             studentInfo.value = response.data.data.studentInfo;
             memoContent.value = response.data.data.studentInfo.memo;
-            setTimeout(() => {
-                loadingData.value = false;
-            }, import.meta.env.VITE_ANI_TIMEOUT);
+            loadingData.value = false;
         });
 };
 

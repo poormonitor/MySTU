@@ -29,9 +29,7 @@ const fetchLogs = (student) => {
         })
         .then((response) => {
             logsData.value = response.data.data.logList;
-            setTimeout(() => {
-                loadingLogs.value = false;
-            }, import.meta.env.VITE_ANI_TIMEOUT);
+            loadingLogs.value = false;
         });
 };
 
@@ -61,9 +59,7 @@ const fetchLog = (logid) => {
         .then((response) => {
             logData.value = response.data.data.logInfo;
             currentLog.value = logid;
-            setTimeout(() => {
-                loadingLog.value = false;
-            }, import.meta.env.VITE_ANI_TIMEOUT);
+            loadingLog.value = false;
         });
 };
 
@@ -114,12 +110,19 @@ onBeforeUnmount(() => {
 
 <template>
     <div class="flex divide-x-2 contentHeight overflow-x-auto">
-        <div class="flex h-full grow-0 shrink-0" v-if="!loadingLogs">
+        <div class="flex h-full grow-0 shrink-0">
             <t-menu theme="light" :value="currentLog" @change="fetchLog">
+                <div class="my-6 flex justify-center" v-if="loadingLogs">
+                    <t-loading
+                        class=""
+                        text="加载中..."
+                        size="small"
+                    ></t-loading>
+                </div>
                 <t-menu-item
                     value="new"
                     @click="editMode = true"
-                    v-if="!viewonly"
+                    v-if="!viewonly && !loadingLogs"
                 >
                     <template #icon>
                         <AddIcon class="w-1.5 h-1.5" />
@@ -145,12 +148,7 @@ onBeforeUnmount(() => {
                 </div>
             </t-menu>
         </div>
-        <t-loading
-            class="mt-6 flex justify-center"
-            text="加载中..."
-            size="small"
-            v-else
-        ></t-loading>
+
         <div class="grow min-w-[400px]">
             <div id="editArea" v-if="editMode || (currentLog && !loadingLog)">
                 <div class="p-8" v-if="!editMode">
