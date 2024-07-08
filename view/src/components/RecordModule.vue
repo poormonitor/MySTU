@@ -84,7 +84,7 @@ const data4 = computed(() => processData(columns4, studentRecord.value.award));
         <p class="text-sm text-neutral-600 mb-8">
             更新时间: {{ studentRecord.last_update }}
         </p>
-        <div class="flex flex-col gap-y-12">
+        <div class="flex flex-col gap-y-8 md:gap-y-12">
             <div>
                 <h3 class="mx-2 mb-1 text-lg font-bold">学分信息</h3>
                 <t-base-table
