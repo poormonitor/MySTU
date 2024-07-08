@@ -119,15 +119,14 @@ def weixin_bind():
 
     try:
         token = unquote(request.args.get("state"))
-        header = base64.b64encode(json.dumps({"alg": "HS256", "typ": "JWT"}).encode())
-        token = header.decode() + "." + token
+        header = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+        token = header + "." + token
+        print(token)
         claims = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=["HS256"])
+    except jwt.ExpiredSignatureError:
+        return redirect(f"/#/wx/error?error=4")
     except:
         return redirect(f"/#/wx/error?error=2")
-
-    timestamp = claims.get("exp")
-    if timestamp < datetime.datetime.now().timestamp():
-        return redirect(f"/#/wx/error?error=4")
 
     code = request.args.get("code")
     if not code:
