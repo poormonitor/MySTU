@@ -138,10 +138,6 @@ def weixin_bind():
     if weixin:
         return redirect(f"/#/wx/error?error=7")
 
-    weixin = Weixin.query.filter_by(openid=openid).first()
-    if weixin:
-        return redirect(f"/#/wx/error?error=8")
-
     appid = Config.WEIXIN_APPID
     secret = Config.WEIXIN_APPSECRET
 
@@ -150,6 +146,10 @@ def weixin_bind():
     res = res.json()
     openid = res.get("openid", None)
     access_token = res.get("access_token", None)
+
+    weixin = Weixin.query.filter_by(openid=openid).first()
+    if weixin:
+        return redirect(f"/#/wx/error?error=8")
 
     url = f"https://api.weixin.qq.com/sns/userinfo?access_token={access_token}&openid={openid}&lang=zh_CN"
     res = requests.get(url)
@@ -224,6 +224,10 @@ def weixin_add():
     res = res.json()
     openid = res.get("openid", None)
     access_token = res.get("access_token", None)
+
+    weixin = Weixin.query.filter_by(openid=openid).first()
+    if weixin:
+        return redirect(f"/#/wx/error?error=8")
 
     if not openid:
         return redirect(f"/#/wx/error?error=3")
