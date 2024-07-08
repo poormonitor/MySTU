@@ -71,13 +71,13 @@ def weixin_create():
     from models.weixin import Weixin
 
     attach = request.args.get("attach")
-    role = request.args.get("role")
-    timestamp = datetime.datetime.now().timestamp()
+    role = int(request.args.get("role"))
 
     weixin = Weixin.query.filter_by(attach=attach, role=role).first()
     attached = weixin is not None
 
     if role == 0:
+        exp = datetime.datetime.now() + datetime.timedelta(minutes=5)
         current = get_jwt_identity()
         if attach != current:
             return jsonify(status="error", message="Permission denied")
@@ -88,21 +88,20 @@ def weixin_create():
         if not user:
             return jsonify(status="error", message="User not found")
 
-        timestamp = timestamp + 5 * 60
-
     elif role == 1:
+        exp = datetime.datetime.now() + datetime.timedelta(days=1)
+
         from models.student import Student
 
         student = Student.query.filter_by(id=attach).first()
         if not student:
             return jsonify(status="error", message="Student not found")
 
-        timestamp = timestamp + 24 * 60 * 60
-
-    timestamp = int(timestamp)
+    exp = exp.timestamp()
+    exp = int(exp)
 
     token = jwt.encode(
-        {"attach": attach, "role": role, "exp": timestamp},
+        {"attach": attach, "role": role, "exp": exp},
         Config.JWT_SECRET_KEY,
         algorithm="HS256",
     )
@@ -133,7 +132,7 @@ def weixin_bind():
         return redirect(f"/#/wx/error?error=2")
 
     attach = claims.get("attach")
-    role = claims.get("role")
+    role = int(claims.get("role"))
 
     weixin = Weixin.query.filter_by(attach=attach, role=role).first()
     if weixin:
@@ -174,7 +173,7 @@ def weixin_unbind():
     from models import db
 
     attach = request.args.get("attach")
-    role = request.args.get("role")
+    role = int(request.args.get("role"))
     weixin = Weixin.query.filter_by(attach=attach, role=role).first()
     if not weixin:
         return jsonify(status="error", message="Weixin not found")
