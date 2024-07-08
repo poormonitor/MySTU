@@ -38,7 +38,7 @@ axios.get("/wx/info").then((response) => {
     </div>
 </template>
 
-<style>
+<style scoped>
 .contentHeight {
     height: auto;
 }
