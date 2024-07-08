@@ -5,7 +5,8 @@ import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 import "@wangeditor/editor/dist/css/style.css";
 import { MessagePlugin } from "tdesign-vue-next";
 
-const props = defineProps(["student"]);
+const props = defineProps(["student", "viewonly"]);
+const viewonly = props.viewonly ?? false;
 const loadingData = ref(false);
 const studentInfo = ref();
 const loadingSubmit = ref(false);
@@ -146,10 +147,14 @@ const submitMemo = () => {
             >
                 <div class="p-4 flex items-center gap-x-2">
                     <span class="font-semibold text-xl">备注</span>
-                    <t-switch v-model="memoEditing" size="large">
-                        <template #label="slotProps">{{
-                            slotProps.value ? "修改" : "查看"
-                        }}</template>
+                    <t-switch
+                        v-model="memoEditing"
+                        size="large"
+                        v-if="!viewonly"
+                    >
+                        <template #label="slotProps">
+                            {{ slotProps.value ? "修改" : "查看" }}
+                        </template>
                     </t-switch>
                 </div>
                 <div id="memoEdit" v-if="memoEditing">

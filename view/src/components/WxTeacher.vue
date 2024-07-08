@@ -129,14 +129,18 @@ const load = (node) => {
                 <template #label>
                     <FileCopyIcon class="mr-1" /> 基本信息
                 </template>
-                <InfoModule :student="currentStudent" :key="studentRenderKey" />
+                <InfoModule
+                    :viewonly="true"
+                    :student="currentStudent"
+                    :key="studentRenderKey"
+                />
             </t-tab-panel>
             <t-tab-panel :value="2" label="谈话记录">
                 <template #label>
                     <UsergroupIcon name="usergroup" class="mr-1" />
                     谈话记录
                 </template>
-                <LogModule :student="currentStudent" />
+                <LogModule :viewonly="true" :student="currentStudent" />
             </t-tab-panel>
         </t-tabs>
     </div>

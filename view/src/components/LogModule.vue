@@ -5,7 +5,8 @@ import { AddIcon } from "tdesign-icons-vue-next";
 import axios from "../axios";
 import "@wangeditor/editor/dist/css/style.css";
 
-const props = defineProps(["student"]);
+const props = defineProps(["student", "viewonly"]);
+const viewonly = props.viewonly ?? false;
 
 const loadingLogs = ref(false);
 const loadingLog = ref(false);
@@ -112,13 +113,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="flex divide-x-2 min-w-[600px] contentHeight">
-        <div
-            class="flex h-full overflow-x-hidden col-span-1"
-            v-if="!loadingLogs"
-        >
+    <div class="flex divide-x-2 contentHeight overflow-x-auto">
+        <div class="flex h-full grow-0 shrink-0" v-if="!loadingLogs">
             <t-menu theme="light" :value="currentLog" @change="fetchLog">
-                <t-menu-item value="new" @click="editMode = true">
+                <t-menu-item
+                    value="new"
+                    @click="editMode = true"
+                    v-if="!viewonly"
+                >
                     <template #icon>
                         <AddIcon class="w-1.5 h-1.5" />
                     </template>
@@ -135,6 +137,12 @@ onBeforeUnmount(() => {
                         <div class="text-xs">{{ log.user }}</div>
                     </div>
                 </t-menu-item>
+                <div
+                    class="text-center mt-3 text-xl"
+                    v-if="viewonly && !logsData.length"
+                >
+                    无
+                </div>
             </t-menu>
         </div>
         <t-loading
@@ -143,7 +151,7 @@ onBeforeUnmount(() => {
             size="small"
             v-else
         ></t-loading>
-        <div class="flex-grow">
+        <div class="grow min-w-[400px]">
             <div id="editArea" v-if="editMode || (currentLog && !loadingLog)">
                 <div class="p-8" v-if="!editMode">
                     <p class="text-3xl font-bold">{{ logData.title }}</p>
