@@ -199,16 +199,18 @@ const switchInfo = (cls, id) => {
 </template>
 
 <style scoped>
+.contentHeight {
+    height: calc(100vh - 11.5rem);
+}
+</style>
+
+<style scoped>
 .t-tabs__nav-container {
     margin-left: 7rem;
 }
 
 .t-tabs__nav-scroll {
     overflow-x: auto;
-}
-
-.contentHeight {
-    height: calc(100vh - 11.5rem);
 }
 
 .t-tabs__header {
