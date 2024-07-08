@@ -13,10 +13,11 @@ class Weixin(db.Model):
     def __repr__(self):
         return "<Weixin %r>" % self.openid
 
-    def __init__(self, openid, role, attach):
+    def __init__(self, openid, role, attach, nick):
         self.openid = openid
         self.role = role
         self.attach = attach
+        self.nick = nick
 
     def to_dict(self):
         return {c.name: getattr(self, c.name, None) for c in self.__table__.columns}
