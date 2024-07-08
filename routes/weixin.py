@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, redirect, current_app
+from flask import Blueprint, request, jsonify, redirect
 from flask_jwt_extended import (
     create_access_token,
     jwt_required,
@@ -155,8 +155,7 @@ def weixin_bind():
     res = requests.get(url)
     res = res.json()
     nickname = res.get("nickname", None)
-
-    current_app.logger.info(f"openid: {openid}, nickname: {nickname}, res: {res}")
+    nickname = nickname.encode("iso-8859-1").decode("utf-8")
 
     if not openid:
         return redirect(f"/#/wx/error?error=3")
@@ -238,6 +237,7 @@ def weixin_add():
     res = requests.get(url)
     res = res.json()
     nickname = res.get("nickname", None)
+    nickname = nickname.encode("iso-8859-1").decode("utf-8")
 
     weixin = Weixin(openid=openid, role=role, attach=attach, nick=nickname)
     db.session.add(weixin)
