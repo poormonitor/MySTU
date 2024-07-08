@@ -212,8 +212,8 @@ def weixin_add():
     student = Student.query.filter_by(id=sid).first()
     if not student:
         return redirect(f"/#/wx/error?error=5")
-
-    if phone != student.fcontact1phone or phone != student.fcontact2phone:
+    
+    if phone != student.fcontact1phone and phone != student.fcontact2phone:
         return redirect(f"/#/wx/error?error=6")
 
     appid = Config.WEIXIN_APPID
