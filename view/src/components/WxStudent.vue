@@ -37,3 +37,9 @@ axios.get("/wx/info").then((response) => {
         <t-loading text="加载中..." size="small"></t-loading>
     </div>
 </template>
+
+<style>
+.contentHeight {
+    height: auto;
+}
+</style>

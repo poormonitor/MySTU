@@ -53,6 +53,7 @@ const columns3 = [
 const columns4 = [
     { colKey: "奖惩原因", title: "奖惩原因" },
     { colKey: "奖惩级别", title: "奖惩级别" },
+    { colKey: "奖惩时间", title: "奖惩时间" },
 ];
 
 const processData = (columns, data) => {
