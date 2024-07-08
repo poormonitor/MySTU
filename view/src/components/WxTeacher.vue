@@ -124,11 +124,13 @@ const switchInfo = (cls, id) => {
             <t-form-item label="选择学生">
                 <div class="flex gap-x-4">
                     <t-select
+                        class="!w-32"
                         :options="classesOptions"
                         v-model="currentClass"
                         @change="handleSelectClass"
                     ></t-select>
                     <t-select
+                        class="!w-32"
                         v-model="currentStudent"
                         :options="options"
                         @change="handleSelect"
