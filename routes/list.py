@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, make_response
-from flask_jwt_extended import jwt_required, get_jwt, get_current_user
+from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
 from const import datetime_to_str
 
 
@@ -128,7 +128,7 @@ def getStudentRecord():
 
     payload = get_jwt()
     if payload.get("weixin", True) and payload.get("type", 1) == 1:
-        current = get_current_user()
+        current = get_jwt_identity()
         if sid != current:
             return jsonify(status="error", message="Permission denied")
 

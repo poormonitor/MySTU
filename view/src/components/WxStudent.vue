@@ -22,7 +22,7 @@ axios.get("/wx/info").then((response) => {
 </script>
 
 <template>
-    <div class="px-4 py-6" v-if="currentStudent">
+    <div class="px-8 py-10" v-if="currentStudent">
         <p class="text-xl font-semibold">{{ studentInfo.name }}</p>
         <p class="mb-2">{{ studentInfo.class }}</p>
         <p>{{ currentStudent }}</p>
