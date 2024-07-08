@@ -74,7 +74,6 @@ def weixin_message():
 
 
 @weixin_bp.route("/wx", methods=["GET", "POST"])
-@jwt_required()
 def weixin_index():
     if request.method == "GET":
         return weixin_verify()
