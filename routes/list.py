@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, make_response
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt, get_current_user
 
 
 list_bp = Blueprint("list", __name__)
@@ -115,6 +115,32 @@ def getStudentInfo():
     student["attached"] = weixin is not None
 
     return jsonify(status="ok", data={"studentInfo": student})
+
+
+@list_bp.route("/record")
+@jwt_required()
+def getStudentRecord():
+    from models.record import Record
+    import json
+
+    sid = request.args.get("student")
+
+    payload = get_jwt()
+    if payload.get("weixin", True) and payload.get("type", 1) == 1:
+        current = get_current_user()
+        if sid != current:
+            return jsonify(status="error", message="Permission denied")
+
+    record = Record.query.filter_by(id=sid).first()
+
+    empty = {"score": [0, 0, 0], "unqualified": [], "attendance": [], "award": []}
+
+    if not record:
+        record = empty
+    else:
+        record = {i: json.loads(j) for i, j in record.to_dict().items() if i in empty}
+
+    return jsonify(status="ok", data={"studentRecord": record})
 
 
 @list_bp.route("/logs")

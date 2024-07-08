@@ -39,6 +39,11 @@ const routes = [
                         component: () => import("./components/UploadExcel.vue"),
                     },
                     {
+                        name: "uploadRecord",
+                        path: "record",
+                        component: () => import("./components/UploadRecord.vue"),
+                    },
+                    {
                         name: "uploadImage",
                         path: "image",
                         component: () => import("./components/UploadImage.vue"),
@@ -124,7 +129,7 @@ router.beforeEach((to, from) => {
 
     let token = sessionStorage.getItem("access_token_mystu");
     let admin = JSON.parse(sessionStorage.getItem("admin_mystu"));
-    
+
     if (to.meta.requireAdmin && !admin) {
         return {
             path: "/",

@@ -3,6 +3,7 @@ from flask_jwt_extended import (
     create_access_token,
     jwt_required,
     get_jwt_identity,
+    get_jwt,
 )
 import jwt
 import requests
@@ -13,6 +14,26 @@ import json
 import datetime
 
 weixin_bp = Blueprint("weixin", __name__)
+
+
+@weixin_bp.route("/wx/info", methods=["GET"])
+@jwt_required()
+def weixin_info():
+    from models.student import Student
+
+    sid = get_jwt_identity()
+    payload = get_jwt()
+
+    if not (payload.get("weixin", False) and payload.get("type", 0) == 1):
+        return jsonify(status="error", message="Permission denied")
+
+    student = Student.query.filter_by(id=sid).first()
+    if not student:
+        return jsonify(status="error", message="Student not found")
+
+    data = {"name": student.name, "class": student.cls, "id": student.id}
+
+    return jsonify(status="ok", data=data)
 
 
 @weixin_bp.route("/wx/login", methods=["GET"])

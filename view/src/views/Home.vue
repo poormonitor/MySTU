@@ -5,6 +5,7 @@ import {
     FileCopyIcon,
     UsergroupIcon,
     SearchIcon,
+    AssignmentUserIcon,
 } from "tdesign-icons-vue-next";
 import LogModule from "../components/LogModule.vue";
 import InfoModule from "../components/InfoModule.vue";
@@ -213,7 +214,8 @@ onMounted(() => {
                 <t-tabs v-model="currentTab">
                     <t-tab-panel :value="1">
                         <template #label>
-                            <FileCopyIcon class="mr-1" /> 基本信息
+                            <FileCopyIcon class="mr-1" />
+                            基本信息
                         </template>
                         <InfoModule
                             :student="currentStudent"
@@ -222,10 +224,17 @@ onMounted(() => {
                     </t-tab-panel>
                     <t-tab-panel :value="2" label="谈话记录">
                         <template #label>
-                            <UsergroupIcon name="usergroup" class="mr-1" />
+                            <UsergroupIcon class="mr-1" />
                             谈话记录
                         </template>
                         <LogModule :student="currentStudent" />
+                    </t-tab-panel>
+                    <t-tab-panel :value="3" label="个人记录">
+                        <template #label>
+                            <AssignmentUserIcon class="mr-1" />
+                            个人记录
+                        </template>
+                        <RecordModule :student="currentStudent" />
                     </t-tab-panel>
                 </t-tabs>
             </div>
@@ -234,7 +243,7 @@ onMounted(() => {
             </div>
         </div>
         <div
-            class="z-10 cursor-pointer border-2 border-gray-200 transition bg-white hover:bg-slate-100 shadow-lg hover:shadow-xl rounded-full absolute bottom-3 left-3 p-4 text-black"
+            class="z-10 cursor-pointer border-2 border-gray-200 transition bg-white hover:bg-slate-100 shadow-lg hover:shadow-xl rounded-full fixed bottom-5 right-5 p-4 text-black"
             @click="SearchVisible = true"
         >
             <div class="flex justify-items-center items-center">

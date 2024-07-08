@@ -1,5 +1,8 @@
 <script setup>
-import {useRouter} from "vue-router"
+import { useRouter } from "vue-router";
+import { ref } from "vue";
+import axios from "../axios";
+import RecordModule from "./RecordModule.vue";
 
 const router = useRouter();
 
@@ -8,8 +11,27 @@ const role = sessionStorage.getItem("role_mystu");
 if (!token || role !== "1") {
     router.push({ name: "wx-welcome" });
 }
+
+const currentStudent = ref(null);
+const studentInfo = ref({ name: "", class: "" });
+
+axios.get("/wx/info").then((response) => {
+    currentStudent.value = response.data.data.id;
+    studentInfo.value = response.data.data;
+});
 </script>
 
 <template>
-    {{ token }}
+    <div class="px-4 py-6" v-if="currentStudent">
+        <p class="text-xl font-semibold">{{ studentInfo.name }}</p>
+        <p class="mb-2">{{ studentInfo.class }}</p>
+        <p>{{ currentStudent }}</p>
+
+        <div class="mt-4">
+            <RecordModule :student="currentStudent" />
+        </div>
+    </div>
+    <div class="mt-6 flex justify-center" v-else>
+        <t-loading text="加载中..." size="small"></t-loading>
+    </div>
 </template>

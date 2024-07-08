@@ -6,11 +6,13 @@ import {
     CloudUploadIcon,
     ImageAddIcon,
     Delete1Icon,
+    FormIcon,
 } from "tdesign-icons-vue-next";
 
 const mngtPath = [
     { to: { name: "userAdmin" }, text: "用户管理", icon: UsergroupAddIcon },
     { to: { name: "uploadExcel" }, text: "上传数据", icon: CloudUploadIcon },
+    { to: { name: "uploadRecord" }, text: "上传记录", icon: FormIcon },
     { to: { name: "uploadImage" }, text: "上传图片", icon: ImageAddIcon },
     { to: { name: "delete" }, text: "删除信息", icon: Delete1Icon },
 ];

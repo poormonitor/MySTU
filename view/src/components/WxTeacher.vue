@@ -4,6 +4,7 @@ import {
     FileCopyIcon,
     SearchIcon,
     UsergroupIcon,
+    AssignmentUserIcon,
 } from "tdesign-icons-vue-next";
 import { useRouter } from "vue-router";
 import LogModule from "../components/LogModule.vue";
@@ -105,7 +106,7 @@ const switchInfo = (cls, id) => {
 
 <template>
     <div
-        class="z-10 cursor-pointer border-2 border-gray-200 transition bg-white hover:bg-slate-100 shadow-lg hover:shadow-xl rounded-full absolute bottom-3 right-3 p-4 text-black"
+        class="z-10 cursor-pointer border-2 border-gray-200 transition bg-white hover:bg-slate-100 shadow-lg hover:shadow-xl rounded-full fixed bottom-5 right-5 p-4 text-black"
         @click="SearchVisible = true"
     >
         <div class="flex justify-items-center items-center">
@@ -120,24 +121,21 @@ const switchInfo = (cls, id) => {
     />
 
     <div class="py-2 px-6 h-14 flex justify-center">
-        <t-form>
-            <t-form-item label="选择学生">
-                <div class="flex gap-x-4">
-                    <t-select
-                        class="!w-32"
-                        :options="classesOptions"
-                        v-model="currentClass"
-                        @change="handleSelectClass"
-                    ></t-select>
-                    <t-select
-                        class="!w-32"
-                        v-model="currentStudent"
-                        :options="options"
-                        @change="handleSelect"
-                    ></t-select>
-                </div>
-            </t-form-item>
-        </t-form>
+        <div class="flex gap-x-3 items-center">
+            <div class="text-sm text-neutral-700">选择学生</div>
+            <t-select
+                class="!w-32"
+                :options="classesOptions"
+                v-model="currentClass"
+                @change="handleSelectClass"
+            ></t-select>
+            <t-select
+                class="!w-24"
+                v-model="currentStudent"
+                :options="options"
+                @change="handleSelect"
+            ></t-select>
+        </div>
     </div>
 
     <div v-if="currentStudent">
@@ -170,7 +168,8 @@ const switchInfo = (cls, id) => {
         <t-tabs v-model="currentTab">
             <t-tab-panel :value="1">
                 <template #label>
-                    <FileCopyIcon class="mr-1" /> 基本信息
+                    <FileCopyIcon class="mr-1" />
+                    基本信息
                 </template>
                 <InfoModule
                     :viewonly="true"
@@ -180,10 +179,17 @@ const switchInfo = (cls, id) => {
             </t-tab-panel>
             <t-tab-panel :value="2" label="谈话记录">
                 <template #label>
-                    <UsergroupIcon name="usergroup" class="mr-1" />
+                    <UsergroupIcon class="mr-1" />
                     谈话记录
                 </template>
                 <LogModule :viewonly="true" :student="currentStudent" />
+            </t-tab-panel>
+            <t-tab-panel :value="3" label="个人记录">
+                <template #label>
+                    <AssignmentUserIcon class="mr-1" />
+                    个人记录
+                </template>
+                <RecordModule :student="currentStudent" />
             </t-tab-panel>
         </t-tabs>
     </div>
@@ -195,6 +201,10 @@ const switchInfo = (cls, id) => {
 <style>
 .t-tabs__nav-container {
     margin-left: 7rem;
+}
+
+.t-tabs__nav-scroll {
+    overflow-x: auto;
 }
 
 .contentHeight {

@@ -139,6 +139,24 @@ def upload():
     return jsonify(status="ok")
 
 
+@manage_bp.route("/admin/upload_record", methods=["POST"])
+@jwt_required(fresh=True)
+@admin_required
+def upload_record():
+    from tempfile import NamedTemporaryFile
+    import subprocess
+    import sys
+    import os
+
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+    data = request.files["data"]
+    filename = NamedTemporaryFile(delete=False, suffix=".xlsx").name
+    data.save(filename)
+    subprocess.Popen([sys.executable, os.path.join(path, "import_record.py"), filename])
+
+    return jsonify(status="ok")
+
+
 @manage_bp.route("/admin/image", methods=["POST"])
 @jwt_required(fresh=True)
 @admin_required
@@ -149,7 +167,7 @@ def image():
     filename = data.filename
 
     if not os.path.exists("uploads"):
-        os.mkdir("uploads")     
+        os.mkdir("uploads")
     if not os.path.exists("uploads/pic"):
         os.mkdir("uploads/pic")
     if os.path.exists("uploads/pic/" + filename):

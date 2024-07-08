@@ -33,6 +33,7 @@ const upload = () => {
 
 <template>
     <p class="text-3xl font-bold px-10 pt-10">上传数据</p>
+    <p class="px-10 pt-5">请上传学生的信息表，表内应含有表头。</p>
     <div class="mt-8 p-8 flex flex-col items-center">
         <div>
             <t-space class="mb-6">
@@ -70,10 +71,10 @@ const upload = () => {
                         class="text-center flex flex-col"
                         v-else-if="progress < 1"
                     >
-                        <p class="text-lg">拖拽文件到此区域区域</p>
+                        <p class="text-lg">拖拽信息文件到此区域区域</p>
                         <p class="py-0.5">或</p>
                         <div class="mx-auto mt-1">
-                            <t-button size="small">单击选择文件</t-button>
+                            <t-button size="small">单击选择信息文件</t-button>
                         </div>
                     </div>
                 </div>
