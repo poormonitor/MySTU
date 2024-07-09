@@ -142,7 +142,7 @@ onBeforeUnmount(() => {
                 </t-menu-item>
                 <div
                     class="text-center mt-3 text-xl"
-                    v-if="viewonly && !logsData.length && !loadingLog"
+                    v-if="viewonly && !logsData.length && !loadingLogs"
                 >
                     无
                 </div>
