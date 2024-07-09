@@ -40,7 +40,7 @@ const columns1 = [
     { colKey: "平均学分绩点", title: "平均学分绩点" },
 ];
 const columns2 = [
-    { colKey: "课程名称", title: "课程名称" },
+    { colKey: "课程名称", title: "课程名称", width: "40%" },
     { colKey: "学分", title: "学分" },
     { colKey: "成绩", title: "成绩" },
     { colKey: "课程性质", title: "课程性质" },
@@ -90,6 +90,7 @@ const data4 = computed(() => processData(columns4, studentRecord.value.award));
                 <div>
                     <h3 class="mb-1 text-lg font-bold">学分信息</h3>
                     <t-base-table
+                        size="small"
                         row-key="index"
                         :columns="columns1"
                         :data="data1"
@@ -98,6 +99,7 @@ const data4 = computed(() => processData(columns4, studentRecord.value.award));
                 <div>
                     <h3 class="mb-1 text-lg font-bold">不及格课程</h3>
                     <t-base-table
+                        size="small"
                         row-key="index"
                         :columns="columns2"
                         :data="data2"
@@ -106,6 +108,7 @@ const data4 = computed(() => processData(columns4, studentRecord.value.award));
                 <div>
                     <h3 class="mb-1 text-lg font-bold">考勤记录</h3>
                     <t-base-table
+                        size="small"
                         row-key="index"
                         :columns="columns3"
                         :data="data3"
@@ -114,6 +117,7 @@ const data4 = computed(() => processData(columns4, studentRecord.value.award));
                 <div>
                     <h3 class="mb-1 text-lg font-bold">奖惩记录</h3>
                     <t-base-table
+                        size="small"
                         row-key="index"
                         :columns="columns4"
                         :data="data4"

@@ -51,7 +51,7 @@ const fetchLog = (logid) => {
         return;
     }
     axios
-        .get("/record", {
+        .get("/log", {
             params: {
                 id: logid,
             },
@@ -142,7 +142,7 @@ onBeforeUnmount(() => {
                 </t-menu-item>
                 <div
                     class="text-center mt-3 text-xl"
-                    v-if="viewonly && !logsData.length"
+                    v-if="viewonly && !logsData.length && !loadingLog"
                 >
                     无
                 </div>

@@ -39,7 +39,7 @@ const loginRequest = () => {
 </script>
 <template>
     <div
-        class="pt-[20vh] bg-gradient-to-br from-cyan-50 to-blue-200 min-h-full"
+        class="py-[20vh] bg-gradient-to-br from-cyan-50 to-blue-200 min-h-full"
     >
         <div
             class="text-center text-4xl lg:text-5xl mb-3 px-6 font-bold tracking-widest"

@@ -182,7 +182,7 @@ def getLogs():
     return jsonify(status="ok", data={"logList": logs})
 
 
-@list_bp.route("/record")
+@list_bp.route("/log")
 @jwt_required(fresh=True)
 def getLog():
     from models.log import Log
