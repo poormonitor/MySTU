@@ -53,7 +53,7 @@ const fetchLog = (logid) => {
     axios
         .get("/log", {
             params: {
-                id: logid,
+                log: logid,
             },
         })
         .then((response) => {

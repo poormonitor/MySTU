@@ -188,7 +188,7 @@ def getLog():
     from models.log import Log
     from const import datetime_to_str
 
-    logid = request.args.get("id")
+    logid = request.args.get("log")
 
     logInfo = Log.query.filter_by(id=logid).first()
     logInfo = logInfo.to_dict()
