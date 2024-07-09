@@ -82,7 +82,7 @@ const data4 = computed(() => processData(columns4, studentRecord.value.award));
 
 <template>
     <div class="contentHeight overflow-y-auto">
-        <div class="px-10 pb-10 pt-6 md:pt-12">
+        <div class="px-10 pb-10 pt-6 md:pt-12" v-if="!loadingData">
             <p class="text-sm text-neutral-600 mb-8">
                 更新时间: {{ studentRecord.last_update }}
             </p>
@@ -124,6 +124,9 @@ const data4 = computed(() => processData(columns4, studentRecord.value.award));
                     />
                 </div>
             </div>
+        </div>
+        <div class="mt-6 flex justify-center" v-else>
+            <t-loading text="加载中..." size="small"></t-loading>
         </div>
     </div>
 </template>
