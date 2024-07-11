@@ -17,12 +17,16 @@ typ = 0
 
 if "不及格学分" in df.columns:
     typ = 0
+    default = "[0,0,0]"
 elif "课程名称" in df.columns:
     typ = 1
+    default = "[]"
 elif "学时" in df.columns:
     typ = 2
+    default = "[]"
 elif "奖惩原因" in df.columns:
     typ = 3
+    default = "[]"
 else:
     raise ValueError("Unknown type of data")
 
@@ -32,6 +36,9 @@ with app.app_context():
 
     match typ:
         case 0:
+            Record.query.update({"score": default})
+            db.session.commit()
+
             for i in df.to_dict(orient="records"):
                 id = i.get("学号", "")
                 cols = ["不及格学分", "获得学分", "平均学分绩点"]
@@ -59,6 +66,9 @@ with app.app_context():
                 2: "attendance",
                 3: "award",
             }
+
+            Record.query.update({attr[typ]: default})
+            db.session.commit()
 
             cols = cols[typ]
             attr = attr[typ]
