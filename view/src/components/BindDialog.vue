@@ -35,14 +35,10 @@ const fetchCode = () => {
         });
 };
 
-const unbind = () => {
-    let user = sessionStorage.getItem("user_mystu");
+const unbind = (openid) => {
     axios
-        .get("/wx/unbind", {
-            params: {
-                attach: user,
-                role: 0,
-            },
+        .post("/wx/unbind", {
+            openid: openid,
         })
         .then(() => {
             fetchCode();
@@ -58,10 +54,15 @@ watch(visible, (value) => {
     <t-dialog v-model:visible="visible" header="微信绑定">
         <div class="h-[300px] flex flex-col justify-center" v-if="url">
             <div class="text-center mb-3" v-if="attached">
-                <span>该账户已被微信 {{ attached }} 绑定，</span>
-                <span class="text-red-800 cursor-pointer" @click="unbind">
-                    解绑
-                </span>
+                <div v-for="item in attached">
+                    <span>该账户已被微信 {{ item[0] }} 绑定，</span>
+                    <span
+                        class="text-red-800 cursor-pointer"
+                        @click="() => unbind(item[1])"
+                    >
+                        解绑
+                    </span>
+                </div>
             </div>
             <div class="flex justify-center">
                 <qrcode-vue :value="url" :size="200" level="L"></qrcode-vue>

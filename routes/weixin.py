@@ -94,8 +94,8 @@ def weixin_create():
     attach = request.args.get("attach")
     role = int(request.args.get("role"))
 
-    weixin = Weixin.query.filter_by(attach=attach, role=role).first()
-    attached = weixin.nick if weixin is not None else False
+    weixin = Weixin.query.filter_by(attach=attach, role=role).all()
+    attached = [[i.nick, i.openid] for i in weixin] if weixin else []
 
     if role == 0:
         exp = datetime.datetime.now() + datetime.timedelta(minutes=5)
@@ -155,8 +155,10 @@ def weixin_bind():
     attach = claims.get("attach")
     role = int(claims.get("role"))
 
-    weixin = Weixin.query.filter_by(attach=attach, role=role).first()
-    if weixin:
+    weixin = Weixin.query.filter_by(attach=attach, role=role).count()
+    if role == 0 and weixin >= 1:
+        return redirect(f"/#/wx/error?error=7")
+    if role == 1 and weixin >= 2:
         return redirect(f"/#/wx/error?error=7")
 
     appid = Config.WEIXIN_APPID
@@ -188,15 +190,14 @@ def weixin_bind():
     return redirect(f"/#/wx/welcome")
 
 
-@weixin_bp.route("/wx/unbind", methods=["GET"])
+@weixin_bp.route("/wx/unbind", methods=["POST"])
 @jwt_required()
 def weixin_unbind():
     from models.weixin import Weixin
     from models import db
 
-    attach = request.args.get("attach")
-    role = int(request.args.get("role"))
-    weixin = Weixin.query.filter_by(attach=attach, role=role).first()
+    openid = request.json.get("openid")
+    weixin = Weixin.query.filter_by(openid=openid).first()
     if not weixin:
         return jsonify(status="error", message="Weixin not found")
 
@@ -247,8 +248,8 @@ def weixin_add():
     openid = res.get("openid", None)
     access_token = res.get("access_token", None)
 
-    weixin = Weixin.query.filter_by(openid=openid).first()
-    if weixin:
+    weixin = Weixin.query.filter_by(openid=openid).count()
+    if weixin >= 2:
         return redirect(f"/#/wx/error?error=8")
 
     if not openid:
