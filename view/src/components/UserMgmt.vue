@@ -16,6 +16,11 @@ const columns = [
     { colKey: "name", title: "姓名" },
     { colKey: "last_login", title: "上次登录" },
     {
+        colKey: "weixin",
+        title: "绑定微信",
+        cell: (_, { col, row }) => (row.weixin ? row.weixin[0] : "-"),
+    },
+    {
         colKey: "admin",
         title: "管理员?",
         cell: (_, { col, row }) => {

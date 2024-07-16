@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from functools import wraps
 from models.user import User
+from models.weixin import Weixin
 from models import db
 
 manage_bp = Blueprint("manage", __name__)
@@ -44,13 +45,14 @@ def passwd():
 def getUsers():
     from const import datetime_to_str
 
-    claims = get_jwt()
-
     users = [i.to_dict() for i in User.query.all()]
     for i in range(len(users)):
-        users[i]["last_login"] = (
-            datetime_to_str(users[i]["last_login"]) if users[i]["last_login"] else ""
-        )
+        last_login = datetime_to_str(d) if (d := users[i]["last_login"]) else ""
+        users[i]["last_login"] = last_login
+
+        weixin = Weixin.query.filter_by(attach=users[i]["id"], role=0).first()
+        users[i]["weixin"] = [weixin.nick, weixin.openid] if weixin else None
+        
         del users[i]["passwd"]
 
     return jsonify(status="ok", data={"users": users})
