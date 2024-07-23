@@ -4,6 +4,7 @@ import { ref } from "vue";
 
 const classes = ref([]);
 const currentClass = ref(null);
+const loading = ref(false);
 
 const getClasses = () => {
     axios.get("/classes").then((response) => {
@@ -28,6 +29,7 @@ const base64toBlob = (base64) => {
 };
 
 const downloadInfo = () => {
+    loading.value = true;
     axios
         .post("/admin/download", { cls: currentClass.value })
         .then((response) => {
@@ -43,9 +45,11 @@ const downloadInfo = () => {
             downloadLink.click();
 
             URL.revokeObjectURL(downloadLink.href);
+            loading.value = false;
         })
         .catch((error) => {
             console.error("Error downloading the file:", error);
+            loading.value = false;
         });
 };
 
@@ -69,6 +73,7 @@ getClasses();
             <t-form-item>
                 <t-button
                     @click="downloadInfo"
+                    :loading="loading"
                     :disabled="currentClass === null"
                 >
                     导出
