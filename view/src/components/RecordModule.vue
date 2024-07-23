@@ -38,6 +38,7 @@ const columns1 = [
     { colKey: "不及格学分", title: "不及格学分" },
     { colKey: "获得学分", title: "获得学分" },
     { colKey: "平均学分绩点", title: "平均学分绩点" },
+    { colKey: "专业排名", title: "专业排名" },
 ];
 const columns2 = [
     { colKey: "课程名称", title: "课程名称", width: "40%" },

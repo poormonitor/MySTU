@@ -17,7 +17,7 @@ typ = 0
 
 if "不及格学分" in df.columns:
     typ = 0
-    default = "[0,0,0]"
+    default = "[0,0,0,0]"
 elif "课程名称" in df.columns:
     typ = 1
     default = "[]"
@@ -41,7 +41,7 @@ with app.app_context():
 
             for i in df.to_dict(orient="records"):
                 id = i.get("学号", "")
-                cols = ["不及格学分", "获得学分", "平均学分绩点"]
+                cols = ["不及格学分", "获得学分", "平均学分绩点", "专业排名"]
                 detail = [i.get(j, "") for j in cols]
                 content = json.dumps(detail)
 

@@ -49,6 +49,11 @@ const routes = [
                         component: () => import("./components/UploadImage.vue"),
                     },
                     {
+                        name: "exportData",
+                        path: "export",
+                        component: () => import("./components/ExportData.vue"),
+                    },
+                    {
                         name: "delete",
                         path: "delete",
                         component: () => import("./components/Delete.vue"),

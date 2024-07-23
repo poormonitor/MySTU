@@ -52,7 +52,7 @@ def getUsers():
 
         weixin = Weixin.query.filter_by(attach=users[i]["id"], role=0).first()
         users[i]["weixin"] = [weixin.nick, weixin.openid] if weixin else None
-        
+
         del users[i]["passwd"]
 
     return jsonify(status="ok", data={"users": users})
@@ -106,6 +106,53 @@ def newUser():
     db.session.commit()
 
     return jsonify(status="ok")
+
+
+@manage_bp.route("/admin/download", methods=["POST"])
+@jwt_required(fresh=True)
+@admin_required
+def download():
+    from models import db
+    from models.student import Student
+    from models.weixin import Weixin
+    from const import info
+
+    import base64
+    from io import BytesIO
+    import pandas as pd
+    import html2text
+
+    cls = request.get_json()["cls"]
+
+    WeixinS = db.session.query(Weixin).filter(Weixin.role == 1).subquery()
+    WeixinA = db.aliased(Weixin, WeixinS)
+
+    students = db.session.query(Student, WeixinA).select_from(Student)
+    students = students.join(WeixinA, WeixinA.attach == Student.id, isouter=True)
+
+    if cls:
+        students = students.filter(Student.cls == cls)
+
+    students = students.order_by(Student.cls.asc(), Student.id.asc()).all()
+
+    data = {}
+    for i in students:
+        for key in info:
+            data.setdefault(info[key], []).append(getattr(i[0], key))
+        data.setdefault("微信绑定", []).append(i[1].nick if i[1] else "")
+    
+    data["备注"] = map(html2text.html2text, data["备注"])
+
+    df = pd.DataFrame(data)
+
+    buffer = BytesIO()
+    writer = pd.ExcelWriter(buffer, engine="openpyxl")
+    df.to_excel(excel_writer=writer, index=False, sheet_name="学生信息")
+    writer.close()
+    excel_content = buffer.getvalue()
+    base64_content = base64.b64encode(excel_content).decode("utf-8")
+
+    return jsonify(status="ok", data={"file": base64_content})
 
 
 @manage_bp.route("/admin/delete", methods=["POST"])
