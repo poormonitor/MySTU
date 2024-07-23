@@ -124,22 +124,20 @@ def download():
 
     cls = request.get_json()["cls"]
 
-    WeixinS = db.session.query(Weixin).filter(Weixin.role == 1).subquery()
-    WeixinA = db.aliased(Weixin, WeixinS)
-
-    students = db.session.query(Student, WeixinA).select_from(Student)
-    students = students.join(WeixinA, WeixinA.attach == Student.id, isouter=True)
-
+    students = db.session.query(Student)
     if cls:
         students = students.filter(Student.cls == cls)
-
     students = students.order_by(Student.cls.asc(), Student.id.asc()).all()
 
     data = {}
     for i in students:
         for key in info:
             data.setdefault(info[key], []).append(getattr(i[0], key))
-        data.setdefault("微信绑定", []).append(i[1].nick if i[1] else "")
+            
+        student_id = i[0].id
+        weixin = Weixin.query.filter_by(attach=student_id, role=0).all()
+        nicks = ",".join([i.nick for i in weixin])
+        data.setdefault("微信绑定", []).append(nicks)
     
     data["备注"] = map(html2text.html2text, data["备注"])
 
