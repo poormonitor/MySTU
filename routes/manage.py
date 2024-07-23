@@ -135,7 +135,7 @@ def download():
             data.setdefault(info[key], []).append(getattr(i, key))
             
         student_id = i.id
-        weixin = Weixin.query.filter_by(attach=student_id, role=0).all()
+        weixin = Weixin.query.filter_by(attach=student_id, role=1).all()
         nicks = ",".join([i.nick for i in weixin])
         data.setdefault("微信绑定", []).append(nicks)
     
