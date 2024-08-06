@@ -16,6 +16,11 @@ from flask_jwt_extended import (
 weixin_bp = Blueprint("weixin", __name__)
 
 
+@weixin_bp.route("/wx/appid", methods=["GET"])
+def weixin_appid():
+    return jsonify(status="ok", data={"appid": current_app.config["WEIXIN_APPID"]})
+
+
 @weixin_bp.route("/wx/info", methods=["GET"])
 @jwt_required()
 def weixin_info():

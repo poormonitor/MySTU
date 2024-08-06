@@ -1,5 +1,6 @@
 <script setup>
 import { reactive } from "vue";
+import axios from "../axios";
 
 const studentInfo = reactive({
     sid: "",
@@ -10,15 +11,18 @@ const bind = () => {
     let state = encodeURIComponent(btoa(JSON.stringify(studentInfo)));
     let current_url = location.origin + "/api/wx/add";
     current_url = encodeURIComponent(current_url);
-    let appid = import.meta.env.VITE_APPID;
-    window.location.href =
-        "https://open.weixin.qq.com/connect/oauth2/authorize?" +
-        `appid=${appid}` +
-        `&redirect_uri=${current_url}` +
-        "&response_type=code" +
-        "&scope=snsapi_userinfo" +
-        `&state=${state}` +
-        "#wechat_redirect";
+    axios.get("/wx/appid").then((response) => {
+        if (response.data.status != "ok") return;
+        let appid = response.data.data.appid;
+        window.location.href =
+            "https://open.weixin.qq.com/connect/oauth2/authorize?" +
+            `appid=${appid}` +
+            `&redirect_uri=${current_url}` +
+            "&response_type=code" +
+            "&scope=snsapi_userinfo" +
+            `&state=${state}` +
+            "#wechat_redirect";
+    });
 };
 </script>
 

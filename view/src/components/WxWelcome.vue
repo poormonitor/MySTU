@@ -1,7 +1,6 @@
 <script setup>
 import { useRouter, useRoute } from "vue-router";
-
-const appid = import.meta.env.VITE_APPID;
+import axios from "../axios";
 
 const router = useRouter();
 const route = useRoute();
@@ -23,13 +22,17 @@ if (route.query.token) {
 } else {
     let current_url = location.origin + "/api/wx/login";
     current_url = encodeURIComponent(current_url);
-    window.location.href =
-        "https://open.weixin.qq.com/connect/oauth2/authorize?" +
-        `appid=${appid}` +
-        `&redirect_uri=${current_url}` +
-        "&response_type=code" +
-        "&scope=snsapi_base" +
-        "#wechat_redirect";
+    axios.get("/wx/appid").then((response) => {
+        if (response.data.status != "ok") return;
+        let appid = response.data.data.appid;
+        window.location.href =
+            "https://open.weixin.qq.com/connect/oauth2/authorize?" +
+            `appid=${appid}` +
+            `&redirect_uri=${current_url}` +
+            "&response_type=code" +
+            "&scope=snsapi_base" +
+            "#wechat_redirect";
+    });
 }
 </script>
 
