@@ -1,8 +1,10 @@
-from server import app
-import pandas as pd
-import sys
-import os
 import json
+import os
+import sys
+
+import pandas as pd
+
+from server import app
 
 if len(sys.argv) < 2:
     filename = input("请输入文件路径：")
@@ -31,8 +33,8 @@ else:
     raise ValueError("Unknown type of data")
 
 with app.app_context():
-    from models.record import Record
     from models import db
+    from models.record import Record
 
     match typ:
         case 0:

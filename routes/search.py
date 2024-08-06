@@ -1,6 +1,7 @@
-from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required
 import re
+
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 
 search_bp = Blueprint("search", __name__)
 
@@ -8,9 +9,9 @@ search_bp = Blueprint("search", __name__)
 @search_bp.route("/search")
 @jwt_required(fresh=True)
 def search():
-    from models.student import Student
-    from models import db
     from const import info
+    from models import db
+    from models.student import Student
 
     keyword = request.args.get("s", "")
     ks = keyword.split(" ")

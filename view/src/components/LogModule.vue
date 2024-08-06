@@ -64,6 +64,11 @@ const fetchLog = (logid) => {
 };
 
 const submitLog = () => {
+    if (!logToSubmit.title || !logToSubmit.content) {
+        submitResult.value = "error";
+        submitMessage.value = "标题和内容不能为空";
+        return;
+    }
     loadingSubmit.value = true;
     axios
         .post("/submit", {
@@ -78,8 +83,9 @@ const submitLog = () => {
         })
         .then((response) => {
             if (response.data.status == "ok") {
-                submitResult.value = "success";
-                submitMessage.value = "记录提交成功";
+                submitResult.value = false;
+                logToSubmit.title = "";
+                logToSubmit.content = "";
                 fetchLogs(props.student);
                 currentLog.value = response.data.data.id;
                 editMode.value = false;
@@ -160,7 +166,7 @@ onBeforeUnmount(() => {
                     <p class="mt-6" v-html="logData.content"></p>
                 </div>
                 <div id="editorArea" v-else>
-                    <div class="px-4 py-2">
+                    <div class="px-4 pt-4">
                         <t-alert
                             :theme="submitResult"
                             :message="submitMessage"

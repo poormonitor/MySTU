@@ -1,9 +1,11 @@
-from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from functools import wraps
+
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
+
+from models import db
 from models.user import User
 from models.weixin import Weixin
-from models import db
 
 manage_bp = Blueprint("manage", __name__)
 
@@ -30,7 +32,7 @@ def passwd():
 
     correct = User.query.filter_by(id=get_jwt_identity()).first()
 
-    if not checkpw(old.encode(), correct.passwd):
+    if not checkpw(old.encode(), correct.passwd.encode()):
         return jsonify(status="error")
 
     correct.passwd = hashpw(new.encode(), gensalt())
@@ -66,6 +68,10 @@ def switchAdmin():
     uid, val = data["id"], bool(data["val"])
 
     user = User.query.filter_by(id=uid).first()
+    
+    if not user:
+        return jsonify(status="error", data={"msg": "用户不存在"})
+    
     user.admin = val
     db.session.commit()
 
@@ -82,6 +88,10 @@ def editPasswd():
     uid, passwd = data["user"], data["passwd"]
 
     user = User.query.filter_by(id=uid).first()
+
+    if not user:
+        return jsonify(status="error", data={"msg": "用户不存在"})
+    
     user.passwd = hashpw(passwd.encode(), gensalt())
     db.session.commit()
 
@@ -112,15 +122,16 @@ def newUser():
 @jwt_required(fresh=True)
 @admin_required
 def download():
+    import base64
+    from io import BytesIO
+
+    import html2text
+    import pandas as pd
+
+    from const import info
     from models import db
     from models.student import Student
     from models.weixin import Weixin
-    from const import info
-
-    import base64
-    from io import BytesIO
-    import pandas as pd
-    import html2text
 
     cls = request.get_json()["cls"]
 
@@ -162,6 +173,9 @@ def deleteUser():
 
     user = User.query.filter_by(id=uid).first()
 
+    if not user:
+        return jsonify(status="error", data={"msg": "用户不存在"})
+
     db.session.delete(user)
     db.session.commit()
 
@@ -172,10 +186,10 @@ def deleteUser():
 @jwt_required(fresh=True)
 @admin_required
 def upload():
-    from tempfile import NamedTemporaryFile
+    import os
     import subprocess
     import sys
-    import os
+    from tempfile import NamedTemporaryFile
 
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
     data = request.files["data"]
@@ -190,10 +204,10 @@ def upload():
 @jwt_required(fresh=True)
 @admin_required
 def upload_record():
-    from tempfile import NamedTemporaryFile
+    import os
     import subprocess
     import sys
-    import os
+    from tempfile import NamedTemporaryFile
 
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
     data = request.files["data"]
@@ -229,8 +243,9 @@ def image():
 @jwt_required(fresh=True)
 @admin_required
 def delete_class():
-    from models.student import Student
     import os
+
+    from models.student import Student
 
     data = request.get_json()
     cls = data["cls"]
@@ -254,8 +269,9 @@ def delete_class():
 @jwt_required(fresh=True)
 @admin_required
 def delete_student():
-    from models.student import Student
     import os
+
+    from models.student import Student
 
     data = request.get_json()
     id = data["id"]

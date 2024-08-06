@@ -4,11 +4,14 @@
 # @Email   : poormonitor@outlook.com
 # @File    : app.py
 
+import os
+
 from flask import Flask
+from flask_cors import CORS
+from flask_jwt_extended import JWTManager
+
 from models import init_app as models_init_app
 from routes import init_app as routes_init_app
-from flask_jwt_extended import JWTManager
-from flask_cors import CORS
 
 
 def create_app():
@@ -17,7 +20,8 @@ def create_app():
     CORS(app)
     JWTManager(app)
 
-    app.config.from_object("config.Config")
+    config = os.getenv("CONFIG", "config.Config")
+    app.config.from_object(config)
 
     db = models_init_app(app)
     routes_init_app(app)
@@ -30,6 +34,7 @@ def create_app():
         user = db.session.query(User).filter_by(admin=True).count()
         if not user:
             from hashlib import sha256
+
             from bcrypt import gensalt, hashpw
 
             db.session.add(

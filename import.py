@@ -1,8 +1,10 @@
-from server import app
-import pandas as pd
-from const import info
-import sys
 import os
+import sys
+
+import pandas as pd
+
+from const import info
+from server import app
 
 if len(sys.argv) < 2:
     filename = input("请输入文件路径：")
@@ -22,8 +24,8 @@ df["居住地"] = df["居住地"].apply(lambda x: x.replace(",", ""))
 df["性别"] = df["性别"].apply(lambda x: 0 if x == "男" else 1)
 
 with app.app_context():
-    from models.student import Student
     from models import db
+    from models.student import Student
 
     for i in df.to_dict(orient="records"):
         detail = [i.get(j, "") for j in info.values()]

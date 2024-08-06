@@ -1,8 +1,10 @@
-from server import app
-from models.student import Student
-from PIL import Image
-from models import db
 import os
+
+from PIL import Image
+
+from models import db
+from models.student import Student
+from server import app
 
 os.chdir("./uploads/pic/")
 with app.app_context():

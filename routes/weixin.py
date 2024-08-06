@@ -1,17 +1,17 @@
-from flask import Blueprint, request, jsonify, redirect
-from flask_jwt_extended import (
-    create_access_token,
-    jwt_required,
-    get_jwt_identity,
-    get_jwt,
-)
+import base64
+import datetime
+import json
+from urllib.parse import unquote
+
 import jwt
 import requests
-from config import Config
-from urllib.parse import unquote
-import base64
-import json
-import datetime
+from flask import Blueprint, jsonify, redirect, request, current_app
+from flask_jwt_extended import (
+    create_access_token,
+    get_jwt,
+    get_jwt_identity,
+    jwt_required,
+)
 
 weixin_bp = Blueprint("weixin", __name__)
 
@@ -38,16 +38,16 @@ def weixin_info():
 
 @weixin_bp.route("/wx/login", methods=["GET"])
 def weixin_login():
-    from models.weixin import Weixin
-    from models.user import User
     from models import db
+    from models.user import User
+    from models.weixin import Weixin
 
     code = request.args.get("code")
     if not code:
         return redirect(f"/#/wx/error?error=2")
 
-    appid = Config.WEIXIN_APPID
-    secret = Config.WEIXIN_APPSECRET
+    appid = current_app.config["WEIXIN_APPID"]
+    secret = current_app.config["WEIXIN_APPSECRET"]
 
     url = f"https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code"
     res = requests.get(url)
@@ -123,7 +123,7 @@ def weixin_create():
 
     token = jwt.encode(
         {"attach": attach, "role": role, "exp": exp},
-        Config.JWT_SECRET_KEY,
+        current_app.config["JWT_SECRET_KEY"],
         algorithm="HS256",
     )
 
@@ -134,15 +134,16 @@ def weixin_create():
 
 @weixin_bp.route("/wx/bind", methods=["GET"])
 def weixin_bind():
-    from models.weixin import Weixin
     from models import db
+    from models.weixin import Weixin
 
     try:
         token = unquote(request.args.get("state"))
         header = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
         token = header + "." + token
-        print(token)
-        claims = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=["HS256"])
+        claims = jwt.decode(
+            token, current_app.config["JWT_SECRET_KEY"], algorithms=["HS256"]
+        )
     except jwt.ExpiredSignatureError:
         return redirect(f"/#/wx/error?error=4")
     except:
@@ -161,8 +162,8 @@ def weixin_bind():
     if role == 1 and weixin >= 2:
         return redirect(f"/#/wx/error?error=7")
 
-    appid = Config.WEIXIN_APPID
-    secret = Config.WEIXIN_APPSECRET
+    appid = current_app.config["WEIXIN_APPID"]
+    secret = current_app.config["WEIXIN_APPSECRET"]
 
     url = f"https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code"
     res = requests.get(url)
@@ -193,8 +194,8 @@ def weixin_bind():
 @weixin_bp.route("/wx/unbind", methods=["POST"])
 @jwt_required()
 def weixin_unbind():
-    from models.weixin import Weixin
     from models import db
+    from models.weixin import Weixin
 
     openid = request.json.get("openid")
     weixin = Weixin.query.filter_by(openid=openid).first()
@@ -209,9 +210,9 @@ def weixin_unbind():
 
 @weixin_bp.route("/wx/add", methods=["GET"])
 def weixin_add():
+    from models import db
     from models.student import Student
     from models.weixin import Weixin
-    from models import db
 
     try:
         token = unquote(request.args.get("state"))
@@ -239,8 +240,8 @@ def weixin_add():
     if phone != student.fcontact1phone and phone != student.fcontact2phone:
         return redirect(f"/#/wx/error?error=6")
 
-    appid = Config.WEIXIN_APPID
-    secret = Config.WEIXIN_APPSECRET
+    appid = current_app.config["WEIXIN_APPID"]
+    secret = current_app.config["WEIXIN_APPSECRET"]
 
     url = f"https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code"
     res = requests.get(url)

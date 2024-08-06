@@ -1,8 +1,9 @@
-from flask import Blueprint, request, jsonify, current_app
-from flask_jwt_extended import create_access_token
-from models.user import User
-from models import db
 from bcrypt import checkpw
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import create_access_token
+
+from models import db
+from models.user import User
 
 login_bp = Blueprint("login", __name__)
 
@@ -13,12 +14,14 @@ def login():
     passwd = request.json.get("passwd", None)
 
     result = User.query.filter_by(id=uid).first()
+
     if not result:
         return jsonify(
             status="error",
             data={"msg": "您输入的用户不存在，请检查"},
         )
-    if not checkpw(passwd.encode(), result.passwd):
+
+    if not checkpw(passwd.encode(), result.passwd.encode()):
         return jsonify(
             status="error",
             data={"msg": "您输入的密码不正确，请检查"},

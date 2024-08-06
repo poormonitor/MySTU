@@ -11,4 +11,3 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WEIXIN_APPID = "wx1234567890abcdef"
     WEIXIN_APPSECRET = "weixinsecret"
-    WEIXIN_TOKEN = "weixintoken"

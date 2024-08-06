@@ -29,6 +29,9 @@ const base64toBlob = (base64) => {
 };
 
 const downloadInfo = () => {
+    if (currentClass.value === null) {
+        return;
+    }
     loading.value = true;
     axios
         .post("/admin/download", { cls: currentClass.value })
@@ -48,7 +51,6 @@ const downloadInfo = () => {
             loading.value = false;
         })
         .catch((error) => {
-            console.error("Error downloading the file:", error);
             loading.value = false;
         });
 };

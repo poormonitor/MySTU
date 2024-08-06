@@ -1,7 +1,7 @@
-from flask import Blueprint, jsonify, request, make_response
-from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
-from const import datetime_to_str
+from flask import Blueprint, jsonify, make_response, request
+from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
 
+from const import datetime_to_str
 
 list_bp = Blueprint("list", __name__)
 
@@ -9,27 +9,27 @@ list_bp = Blueprint("list", __name__)
 @list_bp.route("/classes")
 @jwt_required(fresh=True)
 def getClasses():
-    from datetime import timedelta, datetime
-    from models.student import Student
-    from models.log import Log
+    from datetime import datetime, timedelta
+
     from models import db
+    from models.log import Log
+    from models.student import Student
 
     clsList = db.session.query(Student.cls).distinct().order_by(Student.cls.asc()).all()
-    logCnt = (
-        db.session.query(Student.cls, db.func.count(Log.id))
-        .outerjoin(Student, Student.id == Log.student)
-        .group_by(Student.cls)
-        .filter(Log.indate >= datetime.now() - timedelta(days=7))
-        .all()
-    )
-    memoUpdateCnt = (
-        db.session.query(Student.cls.distinct())
-        .filter(Student.memoupdate >= datetime.now() - timedelta(days=7))
-        .all()
-    )
+
+    logCnt = db.session.query(Student.cls, db.func.count(Log.id))
+    logCnt = logCnt.outerjoin(Student, Student.id == Log.student)
+    logCnt = logCnt.group_by(Student.cls)
+    logCnt = logCnt.filter(Log.indate >= datetime.now() - timedelta(days=7))
+    logCnt = logCnt.all()
+
+    memoCnt = db.session.query(Student.cls.distinct())
+    memoCnt = memoCnt.filter(Student.memoupdate >= datetime.now() - timedelta(days=7))
+    memoCnt = memoCnt.all()
+
     logCnt = {i[0] for i in logCnt if i[1] > 0}
-    memoUpdateCnt = {i[0] for i in memoUpdateCnt}
-    logCnt = logCnt.union(memoUpdateCnt)
+    memoCnt = {i[0] for i in memoCnt}
+    logCnt = logCnt.union(memoCnt)
 
     clsList = [
         {
@@ -46,48 +46,43 @@ def getClasses():
 @list_bp.route("/students")
 @jwt_required(fresh=True)
 def getStudents():
-    from datetime import timedelta, datetime
+    from datetime import datetime, timedelta
+
+    from models import db
     from models.log import Log
     from models.student import Student
     from models.weixin import Weixin
-    from models import db
 
     cls = request.args.get("class")
-    clsName = (
-        db.session.query(Student.cls)
-        .distinct()
-        .order_by(Student.cls.asc())
-        .all()[int(cls)][0]
-    )
-    stuList = (
-        db.session.query(Student.id, Student.name)
-        .filter(Student.cls == clsName)
-        .order_by(Student.name.asc())
-        .all()
-    )
+    clsName = db.session.query(Student.cls)
+    clsName = clsName.distinct()
+    clsName = clsName.order_by(Student.cls.asc())
+    clsName = clsName.all()[int(cls)][0]
 
-    logCnt = (
-        db.session.query(Student.id, db.func.count(Log.id))
-        .outerjoin(Student, Student.id == Log.student)
-        .group_by(Student.id)
-        .filter(Student.cls == clsName)
-        .filter(Log.indate >= datetime.now() - timedelta(days=7))
-        .all()
-    )
-    memoUpdateCnt = (
-        db.session.query(Student.id)
-        .filter(Student.cls == clsName)
-        .filter(Student.memoupdate >= datetime.now() - timedelta(days=7))
-        .all()
-    )
+    stuList = db.session.query(Student.id, Student.name)
+    stuList = stuList.filter(Student.cls == clsName)
+    stuList = stuList.order_by(Student.name.asc())
+    stuList = stuList.all()
+
+    logCnt = db.session.query(Student.id, db.func.count(Log.id))
+    logCnt = logCnt.outerjoin(Student, Student.id == Log.student)
+    logCnt = logCnt.group_by(Student.id)
+    logCnt = logCnt.filter(Student.cls == clsName)
+    logCnt = logCnt.filter(Log.indate >= datetime.now() - timedelta(days=7))
+    logCnt = logCnt.all()
+
+    memoCnt = db.session.query(Student.id)
+    memoCnt = memoCnt.filter(Student.cls == clsName)
+    memoCnt = memoCnt.filter(Student.memoupdate >= datetime.now() - timedelta(days=7))
+    memoCnt = memoCnt.all()
+
     logCnt = {i[0] for i in logCnt if i[1] > 0}
-    memoUpdateCnt = {i[0] for i in memoUpdateCnt}
-    logCnt = logCnt.union(memoUpdateCnt)
+    memoCnt = {i[0] for i in memoCnt}
+    logCnt = logCnt.union(memoCnt)
 
     subquery = db.session.query(Student.id).filter(Student.cls == clsName).subquery()
-    weixinAttached = db.session.query(subquery).join(
-        Weixin, Weixin.attach == subquery.c.id
-    )
+    weixinAttached = db.session.query(subquery)
+    weixinAttached = weixinAttached.join(Weixin, Weixin.attach == subquery.c.id)
 
     stuList = [
         {
@@ -110,6 +105,10 @@ def getStudentInfo():
 
     sid = request.args.get("student")
     student = Student.query.filter_by(id=sid).first().to_dict()
+
+    if not student:
+        return jsonify(status="error", message="学生不存在")
+    
     student["sex"] = ["男", "女"][student["sex"]]
 
     weixin = Weixin.query.filter_by(attach=sid).first()
@@ -121,8 +120,9 @@ def getStudentInfo():
 @list_bp.route("/record")
 @jwt_required()
 def getStudentRecord():
-    from models.record import Record
     import json
+
+    from models.record import Record
 
     sid = request.args.get("student")
 
@@ -154,20 +154,18 @@ def getStudentRecord():
 @list_bp.route("/logs")
 @jwt_required(fresh=True)
 def getLogs():
+    from const import datetime_to_str
+    from models import db
     from models.log import Log
     from models.user import User
-    from models import db
-    from const import datetime_to_str
 
     student = request.args.get("student")
 
-    logs = (
-        db.session.query(Log.id, Log.indate, User.name, Log.title)
-        .outerjoin(User, User.id == Log.user)
-        .filter(Log.student == student)
-        .order_by(Log.indate.desc())
-        .all()
-    )
+    logs = db.session.query(Log.id, Log.indate, User.name, Log.title)
+    logs = logs.outerjoin(User, User.id == Log.user)
+    logs = logs.filter(Log.student == student)
+    logs = logs.order_by(Log.indate.desc())
+    logs = logs.all()
 
     logs = [
         {
@@ -185,12 +183,16 @@ def getLogs():
 @list_bp.route("/log")
 @jwt_required(fresh=True)
 def getLog():
-    from models.log import Log
     from const import datetime_to_str
+    from models.log import Log
 
     logid = request.args.get("log")
 
     logInfo = Log.query.filter_by(id=logid).first()
+
+    if not logInfo:
+        return jsonify(status="error", message="记录不存在")
+    
     logInfo = logInfo.to_dict()
     logInfo["indate"] = datetime_to_str(logInfo["indate"])
 
