@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from . import db
 
 
@@ -7,7 +9,7 @@ class Log(db.Model):
     student = db.Column(db.String(32), index=True)
     title = db.Column(db.String(64))
     content = db.Column(db.Text)
-    indate = db.Column(db.DateTime, default=db.func.now())
+    indate = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     user = db.Column(db.String(32))
 
     def __repr__(self):

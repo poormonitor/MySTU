@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from bcrypt import checkpw
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import create_access_token
@@ -27,7 +29,7 @@ def login():
             data={"msg": "您输入的密码不正确，请检查"},
         )
 
-    result.last_login = db.func.now()
+    result.last_login = datetime.now(timezone.utc)
     db.session.commit()
 
     access_token = create_access_token(

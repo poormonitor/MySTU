@@ -26,6 +26,8 @@ def submitLog():
 @submit_bp.route("/memo", methods=["POST"])
 @jwt_required(fresh=True)
 def submitMemo():
+    from datetime import datetime, timezone
+
     from models import db
     from models.student import Student
 
@@ -38,6 +40,7 @@ def submitMemo():
         return jsonify(status="error", data={"msg": "学生不存在"})
 
     student.memo = memo
+    student.memoupdate = datetime.now(timezone.utc)
     db.session.commit()
 
     return jsonify(status="ok")

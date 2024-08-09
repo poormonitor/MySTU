@@ -9,7 +9,7 @@ list_bp = Blueprint("list", __name__)
 @list_bp.route("/classes")
 @jwt_required(fresh=True)
 def getClasses():
-    from datetime import datetime, timedelta
+    from datetime import datetime, timedelta, timezone
 
     from models import db
     from models.log import Log
@@ -17,14 +17,16 @@ def getClasses():
 
     clsList = db.session.query(Student.cls).distinct().order_by(Student.cls.asc()).all()
 
+    date_after = datetime.now(timezone.utc) - timedelta(days=7)
+
     logCnt = db.session.query(Student.cls, db.func.count(Log.id))
     logCnt = logCnt.outerjoin(Student, Student.id == Log.student)
     logCnt = logCnt.group_by(Student.cls)
-    logCnt = logCnt.filter(Log.indate >= datetime.now() - timedelta(days=7))
+    logCnt = logCnt.filter(Log.indate >= date_after)
     logCnt = logCnt.all()
 
     memoCnt = db.session.query(Student.cls.distinct())
-    memoCnt = memoCnt.filter(Student.memoupdate >= datetime.now() - timedelta(days=7))
+    memoCnt = memoCnt.filter(Student.memoupdate >= date_after)
     memoCnt = memoCnt.all()
 
     logCnt = {i[0] for i in logCnt if i[1] > 0}
@@ -108,7 +110,7 @@ def getStudentInfo():
 
     if not student:
         return jsonify(status="error", message="学生不存在")
-    
+
     student["sex"] = ["男", "女"][student["sex"]]
 
     weixin = Weixin.query.filter_by(attach=sid).first()
@@ -192,7 +194,7 @@ def getLog():
 
     if not logInfo:
         return jsonify(status="error", message="记录不存在")
-    
+
     logInfo = logInfo.to_dict()
     logInfo["indate"] = datetime_to_str(logInfo["indate"])
 

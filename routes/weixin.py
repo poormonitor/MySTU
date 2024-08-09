@@ -5,7 +5,7 @@ from urllib.parse import unquote
 
 import jwt
 import requests
-from flask import Blueprint, jsonify, redirect, request, current_app
+from flask import Blueprint, current_app, jsonify, redirect, request
 from flask_jwt_extended import (
     create_access_token,
     get_jwt,
@@ -43,6 +43,8 @@ def weixin_info():
 
 @weixin_bp.route("/wx/login", methods=["GET"])
 def weixin_login():
+    from datetime import datetime, timezone
+
     from models import db
     from models.user import User
     from models.weixin import Weixin
@@ -66,14 +68,14 @@ def weixin_login():
     if not weixin:
         return redirect(f"/#/wx/error?error=1")
 
-    weixin.last_login = db.func.now()
+    weixin.last_login = datetime.now(timezone.utc)
     db.session.commit()
 
     if weixin.role == 0:
         user_id = weixin.attach
         user = User.query.filter_by(id=user_id).first()
 
-        user.last_login = db.func.now()
+        user.last_login = datetime.now(timezone.utc)
         db.session.commit()
 
         access_token = create_access_token(

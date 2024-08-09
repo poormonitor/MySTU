@@ -33,6 +33,8 @@ else:
     raise ValueError("Unknown type of data")
 
 with app.app_context():
+    from datetime import datetime, timezone
+
     from models import db
     from models.record import Record
 
@@ -53,7 +55,7 @@ with app.app_context():
                     db.session.add(record)
 
                 record.score = content
-                record.last_update = db.func.now()
+                record.last_update = datetime.now(timezone.utc)
                 db.session.commit()
 
         case 1 | 2 | 3:
@@ -87,7 +89,7 @@ with app.app_context():
                     db.session.add(record)
 
                 setattr(record, attr, content)
-                record.last_update = db.func.now()
+                record.last_update = datetime.now(timezone.utc)
                 db.session.commit()
 
 

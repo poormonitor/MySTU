@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from . import db
 
 
@@ -8,7 +10,7 @@ class Record(db.Model):
     unqualified = db.Column(db.Text, default="[]")
     attendance = db.Column(db.Text, default="[]")
     award = db.Column(db.Text, default="[]")
-    last_update = db.Column(db.DateTime, default=db.func.now())
+    last_update = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
     def __repr__(self):
         return "<Record %r>" % self.id

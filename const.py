@@ -30,4 +30,7 @@ def datetime_to_str(date_time):
     tz = timezone("Asia/Shanghai")
     utc = timezone("UTC")
 
-    return date_time.replace(tzinfo=utc).astimezone(tz).strftime("%Y-%m-%d %H:%M:%S")
+    date_time = date_time.replace(tzinfo=utc)
+    date_time = date_time.astimezone(tz)
+
+    return date_time.strftime("%Y-%m-%d %H:%M:%S")
