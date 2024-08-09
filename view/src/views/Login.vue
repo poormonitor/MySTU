@@ -96,12 +96,12 @@ const loginRequest = () => {
             </div>
             <div class="lg:py-20 py-10 px-12 flex-wrap lg:w-3/5">
                 <p
-                    class="lg:leading-relaxed font-semibold text-2xl lg:text-4xl text-transparent bg-clip-text bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500"
+                    class="lg:leading-relaxed font-semibold text-2xl lg:text-3xl text-transparent bg-clip-text bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500"
                 >
                     世界上没有才能的人是没有的。问题在于教育者要去发现每一位学生的禀赋、兴趣、爱好和特长，为他们的表现和发展提供充分的条件和正确引导。
                 </p>
                 <p
-                    class="pt-4 lg:pt-8 text-xl lg:text-3xl font-bold text-right text-stone-900"
+                    class="pt-4 lg:pt-8 text-xl lg:text-2xl font-bold text-right"
                 >
                     苏霍姆林斯基
                 </p>
