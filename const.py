@@ -6,8 +6,6 @@ info = {
     "party": "政治面貌",
     "people": "民族",
     "religion": "宗教信仰",
-    "identity": "身份证号",
-    "bank": "银行卡号",
     "phone": "手机",
     "email": "邮箱",
     "qq": "QQ",

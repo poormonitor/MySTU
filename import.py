@@ -15,8 +15,6 @@ else:
 
 df = pd.read_excel(filename, dtype="str", engine="openpyxl")
 df.columns = df.columns.map(lambda x: x.replace("*", ""))
-df = df.drop("邮编", axis=1, errors="ignore")
-df = df.drop("序号", axis=1, errors="ignore")
 df = df.drop_duplicates(subset=["学号"])
 df = df.applymap(lambda x: x if str(x) != "nan" else "")
 df = df.applymap(lambda x: x.replace(" ", "") if isinstance(x, str) else x)
