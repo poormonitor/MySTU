@@ -19,7 +19,7 @@ typ = 0
 
 if "不及格学分" in df.columns:
     typ = 0
-    default = "[0,0,0,0]"
+    default = '["","","",""]'
 elif "课程名称" in df.columns:
     typ = 1
     default = "[]"
@@ -47,6 +47,7 @@ with app.app_context():
                 id = i.get("学号", "")
                 cols = ["不及格学分", "获得学分", "平均学分绩点", "专业排名"]
                 detail = [i.get(j, "") for j in cols]
+                detail = [j if str(j) != "nan" else "" for j in detail]
                 content = json.dumps(detail)
 
                 record = Record.query.filter_by(id=id).first()

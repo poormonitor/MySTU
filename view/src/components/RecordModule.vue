@@ -5,7 +5,7 @@ import { ref, watch, computed } from "vue";
 const props = defineProps(["student"]);
 const loadingData = ref(false);
 const studentRecord = ref({
-    score: [0, 0, 0],
+    score: ["", "", "", ""],
     unqualified: [],
     attendance: [],
     award: [],
