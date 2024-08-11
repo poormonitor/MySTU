@@ -137,7 +137,7 @@ def getStudentRecord():
     record = Record.query.filter_by(id=sid).first()
 
     empty = {
-        "score": ["", "", "", ""],
+        "score": [],
         "unqualified": [],
         "attendance": [],
         "award": [],

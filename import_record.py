@@ -19,7 +19,7 @@ typ = 0
 
 if "不及格学分" in df.columns:
     typ = 0
-    default = '["","","",""]'
+    default = '[]'
 elif "课程名称" in df.columns:
     typ = 1
     default = "[]"

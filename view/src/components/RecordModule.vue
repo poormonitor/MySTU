@@ -5,7 +5,7 @@ import { ref, watch, computed } from "vue";
 const props = defineProps(["student"]);
 const loadingData = ref(false);
 const studentRecord = ref({
-    score: ["", "", "", ""],
+    score: [],
     unqualified: [],
     attendance: [],
     award: [],
@@ -58,7 +58,7 @@ const columns4 = [
 ];
 
 const processData = (columns, data) => {
-    if (!data) return [];
+    if (!data.length || !data[0].length) return [];
     return data.map((item, index) => {
         let obj = { index: index + 1 };
         let cols = columns.map((e) => e.colKey);
