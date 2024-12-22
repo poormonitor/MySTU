@@ -19,7 +19,7 @@ typ = 0
 
 if "不及格学分" in df.columns:
     typ = 0
-    default = '[]'
+    default = "[]"
 elif "课程名称" in df.columns:
     typ = 1
     default = "[]"
@@ -81,7 +81,10 @@ with app.app_context():
             ids = df["学号"].unique()
             for id in ids:
                 records = df[df["学号"] == id].to_dict(orient="records")
-                detail = [[i.get(j, "") for j in cols] for i in records]
+                detail = [
+                    [i.get(j, "") if str(j) != "nan" else "" for j in cols]
+                    for i in records
+                ]
                 content = json.dumps(detail)
 
                 record = Record.query.filter_by(id=id).first()
