@@ -141,6 +141,7 @@ def getStudentRecord():
         "unqualified": [],
         "attendance": [],
         "award": [],
+        "warning": [],
     }
 
     if not record:

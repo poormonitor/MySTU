@@ -9,6 +9,7 @@ const studentRecord = ref({
     unqualified: [],
     attendance: [],
     award: [],
+    warning: "",
 });
 
 const fetchStudentInfo = (student) => {
@@ -88,6 +89,15 @@ const data4 = computed(() => processData(columns4, studentRecord.value.award));
                 更新时间: {{ studentRecord.last_update }}
             </p>
             <div class="flex flex-col gap-y-8 md:gap-y-12">
+                <div>
+                    <h3 class="mb-1 text-xl font-bold">提醒</h3>
+                    <div class="text-lg" v-if="studentRecord.warning">
+                        <p v-for="item in studentRecord.warning">
+                            {{ item[0] }}
+                        </p>
+                    </div>
+                    <p class="min-h-6" v-else>无</p>
+                </div>
                 <div>
                     <h3 class="mb-1 text-lg font-bold">学分信息</h3>
                     <t-base-table

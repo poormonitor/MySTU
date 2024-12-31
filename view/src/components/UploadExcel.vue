@@ -33,7 +33,16 @@ const upload = () => {
 
 <template>
     <p class="text-3xl font-bold px-10 pt-10">上传数据</p>
-    <p class="px-10 pt-5">请上传学生的信息表，表内应含有表头。</p>
+    <div class="my-5 px-10">
+        <p>请上传学生的信息表，表内应含有表头。</p>
+        <p>
+            学号 姓名 性别 班级 政治面貌 民族 宗教信仰 手机 邮箱 QQ 寝室 床号
+            联系人 户籍所在地 家庭联系人1 家庭联系人1电话 家庭联系人2
+            家庭联系人2电话 居住地
+        </p>
+    </div>
+
+    <p class="px-10 pt-5"></p>
     <div class="mt-8 p-8 flex flex-col items-center">
         <div>
             <t-space class="mb-6">

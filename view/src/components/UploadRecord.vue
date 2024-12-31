@@ -33,7 +33,16 @@ const upload = () => {
 
 <template>
     <p class="text-3xl font-bold px-10 pt-10">上传记录</p>
-    <p class="px-10 pt-5">请上传学生的信息记录表，系统自动判断数据类型。</p>
+    <div class="my-5 px-10">
+        <p>请上传学生的信息记录表，系统自动判断数据类型。</p>
+        <p>数据格式：</p>
+        <p>学分信息 表头：学号 不及格学分 获得学分 平均学分绩点 专业排名</p>
+        <p>不及格课程 表头：学号 课程名称 学分 成绩 课程性质</p>
+        <p>考勤记录 表头：学号 时间 内容 学时</p>
+        <p>奖惩记录 表头：学号 奖惩原因 奖惩级别 奖惩时间</p>
+        <p>提醒 表头：学号 提醒</p>
+    </div>
+
     <div class="mt-8 p-8 flex flex-col items-center">
         <div>
             <t-space class="mb-6">

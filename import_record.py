@@ -29,6 +29,9 @@ elif "学时" in df.columns:
 elif "奖惩原因" in df.columns:
     typ = 3
     default = "[]"
+elif "提醒" in df.columns:
+    typ = 4
+    default = "[]"
 else:
     raise ValueError("Unknown type of data")
 
@@ -59,17 +62,19 @@ with app.app_context():
                 record.last_update = datetime.now(timezone.utc)
                 db.session.commit()
 
-        case 1 | 2 | 3:
+        case 1 | 2 | 3 | 4:
             cols = {
                 1: ["课程名称", "学分", "成绩", "课程性质"],
                 2: ["时间", "内容", "学时"],
                 3: ["奖惩原因", "奖惩级别", "奖惩时间"],
+                4: ["提醒"],
             }
 
             attr = {
                 1: "unqualified",
                 2: "attendance",
                 3: "award",
+                4: "warning",
             }
 
             Record.query.update({attr[typ]: default})

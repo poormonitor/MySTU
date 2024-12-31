@@ -6,10 +6,11 @@ from . import db
 class Record(db.Model):
     __tablename__ = "record"
     id = db.Column(db.String(32), primary_key=True)
-    score = db.Column(db.Text, default="[0,0,0,0]")
+    score = db.Column(db.Text, default="[]")
     unqualified = db.Column(db.Text, default="[]")
     attendance = db.Column(db.Text, default="[]")
     award = db.Column(db.Text, default="[]")
+    warning = db.Column(db.Text, default="[]")
     last_update = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
     def __repr__(self):
