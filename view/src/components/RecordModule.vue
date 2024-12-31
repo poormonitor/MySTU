@@ -91,7 +91,7 @@ const data4 = computed(() => processData(columns4, studentRecord.value.award));
             <div class="flex flex-col gap-y-8 md:gap-y-12">
                 <div v-if="studentRecord.warning.length">
                     <h3 class="mb-1 text-xl font-bold">提醒</h3>
-                    <div class="text-lg">
+                    <div class="text-lg text-red-600">
                         <p v-for="item in studentRecord.warning">
                             {{ item[0] }}
                         </p>
