@@ -69,18 +69,7 @@ const largeItem = ["email", "residence"];
 const mediumItem = ["domicile"];
 
 const editorRef = shallowRef();
-const toolbarConfig = {
-    excludeKeys: [
-        "codeBlock",
-        "insertLink",
-        "insertTable",
-        "insertVideo",
-        "group-image",
-        "todo",
-        "blockquote",
-        "fullScreen",
-    ],
-};
+const toolbarConfig = {};
 const editorConfig = { placeholder: "请输入备注内容..." };
 const handleCreated = (editor) => {
     editorRef.value = editor;
@@ -166,6 +155,7 @@ const submitMemo = () => {
                             class="overflow-hidden border-b"
                             v-model="memoContent"
                             :defaultConfig="editorConfig"
+                            mode="simple"
                             @onCreated="handleCreated"
                         />
                     </div>

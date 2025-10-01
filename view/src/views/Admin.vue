@@ -8,6 +8,7 @@ import {
     Delete1Icon,
     FormIcon,
     FileExportIcon,
+    TipsDoubleIcon,
 } from "tdesign-icons-vue-next";
 
 const mngtPath = [
@@ -16,6 +17,7 @@ const mngtPath = [
     { to: { name: "uploadRecord" }, text: "上传记录", icon: FormIcon },
     { to: { name: "uploadImage" }, text: "上传图片", icon: ImageAddIcon },
     { to: { name: "exportData" }, text: "导出数据", icon: FileExportIcon },
+    { to: { name: "exportLog" }, text: "导出谈话记录", icon: TipsDoubleIcon },
     { to: { name: "delete" }, text: "删除信息", icon: Delete1Icon },
 ];
 const route = useRoute();

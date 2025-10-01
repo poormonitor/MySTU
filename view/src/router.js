@@ -54,6 +54,11 @@ const routes = [
                         component: () => import("./components/ExportData.vue"),
                     },
                     {
+                        name: "exportLog",
+                        path: "log",
+                        component: () => import("./components/ExportLog.vue"),
+                    },
+                    {
                         name: "delete",
                         path: "delete",
                         component: () => import("./components/Delete.vue"),

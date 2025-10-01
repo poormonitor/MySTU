@@ -1,22 +1,16 @@
 <script setup>
 import axios from "../axios";
+import dayjs from "dayjs";
 import { ref } from "vue";
 
-const classes = ref([]);
-const currentClass = ref(null);
+const range = ref([]);
 const loading = ref(false);
 
-const getClasses = () => {
-    axios.get("/classes").then((response) => {
-        if (response.data.status == "ok") {
-            let clsList = response.data.data.clsList.map((cls) => {
-                return { id: cls.name, name: cls.name };
-            });
-            clsList.unshift({ name: "全部", id: "" });
-            classes.value = clsList;
-        }
-    });
-};
+const presets = ref({
+    最近半年: [dayjs().subtract(6, "month").toDate(), dayjs().toDate()],
+    最近1个季度: [dayjs().subtract(3, "month").toDate(), dayjs().toDate()],
+    今天: [dayjs().toDate(), dayjs().toDate()],
+});
 
 const base64toBlob = (base64) => {
     let bstr = atob(base64);
@@ -29,12 +23,15 @@ const base64toBlob = (base64) => {
 };
 
 const downloadInfo = () => {
-    if (currentClass.value === null) {
+    if (range.value.length === 0) {
         return;
     }
     loading.value = true;
     axios
-        .post("/admin/download", { cls: currentClass.value })
+        .post("/admin/download_log", {
+            start_time: range.value[0],
+            end_time: range.value[1],
+        })
         .then((response) => {
             const blob = base64toBlob(response.data.data.file);
             const downloadLink = document.createElement("a");
@@ -42,7 +39,7 @@ const downloadInfo = () => {
             downloadLink.href = URL.createObjectURL(blob);
             downloadLink.setAttribute(
                 "download",
-                `MySTU_Export_${new Date().getTime()}.xlsx`
+                `MySTU_Export_Log_${new Date().getTime()}.xlsx`
             );
 
             downloadLink.click();
@@ -54,33 +51,24 @@ const downloadInfo = () => {
             loading.value = false;
         });
 };
-
-getClasses();
 </script>
 
 <template>
-    <p class="text-3xl font-bold px-10 pt-10">导出信息</p>
+    <p class="text-3xl font-bold px-10 pt-10">导出谈话记录</p>
     <div class="my-5 px-10">
-        <p>导出指定班级或是全部学生的信息。</p>
+        <p>导出指定日期之间的学生谈话记录。</p>
     </div>
 
     <div class="mt-8 p-8 flex flex-col items-center">
         <t-form>
-            <t-form-item label="班级" name="class">
-                <t-select v-model="currentClass">
-                    <t-option
-                        :key="cls.id"
-                        :value="cls.id"
-                        :label="cls.name"
-                        v-for="cls in classes"
-                    />
-                </t-select>
+            <t-form-item label="起止时间" name="class">
+                <t-date-range-picker v-model="range" :presets="presets" />
             </t-form-item>
             <t-form-item>
                 <t-button
                     @click="downloadInfo"
                     :loading="loading"
-                    :disabled="currentClass === null"
+                    :disabled="range.length !== 2"
                 >
                     导出
                 </t-button>

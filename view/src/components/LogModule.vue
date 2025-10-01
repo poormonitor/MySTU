@@ -182,12 +182,14 @@ onBeforeUnmount(() => {
                     <Toolbar
                         :editor="editorRef"
                         :defaultConfig="toolbarConfig"
+                        mode="simple"
                     />
                     <div class="h-[30vh]">
                         <Editor
                             class="overflow-hidden border-b"
                             v-model="logToSubmit.content"
                             :defaultConfig="editorConfig"
+                            mode="simple"
                             @onCreated="handleCreated"
                         />
                     </div>

@@ -32,6 +32,9 @@ elif "奖惩原因" in df.columns:
 elif "提醒" in df.columns:
     typ = 4
     default = "[]"
+elif "活动内容" in df.columns:
+    typ = 5
+    default = "[]"
 else:
     raise ValueError("Unknown type of data")
 
@@ -68,6 +71,7 @@ with app.app_context():
                 2: ["时间", "内容", "学时"],
                 3: ["奖惩原因", "奖惩级别", "奖惩时间"],
                 4: ["提醒"],
+                5: ["活动内容", "活动时数", "活动日期"]
             }
 
             attr = {
@@ -75,6 +79,7 @@ with app.app_context():
                 2: "attendance",
                 3: "award",
                 4: "warning",
+                5: "activity",
             }
 
             Record.query.update({attr[typ]: default})

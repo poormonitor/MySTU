@@ -9,6 +9,7 @@ const studentRecord = ref({
     unqualified: [],
     attendance: [],
     award: [],
+    activity: [],
     warning: "",
 });
 
@@ -57,6 +58,11 @@ const columns4 = [
     { colKey: "奖惩级别", title: "奖惩级别" },
     { colKey: "奖惩时间", title: "奖惩时间" },
 ];
+const columns5 = [
+    { colKey: "活动名称", title: "活动名称" },
+    { colKey: "活动时数", title: "活动时数" },
+    { colKey: "活动日期", title: "活动日期" },
+];
 
 const processData = (columns, data) => {
     if (!data.length || !data[0].length) return [];
@@ -80,10 +86,13 @@ const data3 = computed(() =>
     processData(columns3, studentRecord.value.attendance)
 );
 const data4 = computed(() => processData(columns4, studentRecord.value.award));
+const data5 = computed(() =>
+    processData(columns5, studentRecord.value.activity)
+);
 </script>
 
 <template>
-    <div class="contentHeight overflow-y-auto">
+    <div class="contentHeight overflow-y-auto pb-12">
         <div class="px-10 pb-10 pt-6 md:pt-12" v-if="!loadingData">
             <p class="text-sm text-neutral-600 mb-8">
                 更新时间: {{ studentRecord.last_update }}
@@ -131,6 +140,15 @@ const data4 = computed(() => processData(columns4, studentRecord.value.award));
                         row-key="index"
                         :columns="columns4"
                         :data="data4"
+                    />
+                </div>
+                <div>
+                    <h3 class="mb-1 text-lg font-bold">活动记录</h3>
+                    <t-base-table
+                        size="small"
+                        row-key="index"
+                        :columns="columns5"
+                        :data="data5"
                     />
                 </div>
             </div>

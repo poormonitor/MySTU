@@ -142,6 +142,7 @@ def getStudentRecord():
         "attendance": [],
         "award": [],
         "warning": [],
+        "activity": [],
     }
 
     if not record:

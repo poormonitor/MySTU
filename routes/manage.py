@@ -68,10 +68,10 @@ def switchAdmin():
     uid, val = data["id"], bool(data["val"])
 
     user = User.query.filter_by(id=uid).first()
-    
+
     if not user:
         return jsonify(status="error", data={"msg": "用户不存在"})
-    
+
     user.admin = val
     db.session.commit()
 
@@ -91,7 +91,7 @@ def editPasswd():
 
     if not user:
         return jsonify(status="error", data={"msg": "用户不存在"})
-    
+
     user.passwd = hashpw(passwd.encode(), gensalt())
     db.session.commit()
 
@@ -144,12 +144,12 @@ def download():
     for i in students:
         for key in info:
             data.setdefault(info[key], []).append(getattr(i, key))
-            
+
         student_id = i.id
         weixin = Weixin.query.filter_by(attach=student_id, role=1).all()
         nicks = "|".join([i.nick for i in weixin])
         data.setdefault("微信绑定", []).append(nicks)
-    
+
     data["备注"] = map(html2text.html2text, data["备注"])
 
     df = pd.DataFrame(data)
@@ -157,6 +157,53 @@ def download():
     buffer = BytesIO()
     writer = pd.ExcelWriter(buffer, engine="openpyxl")
     df.to_excel(excel_writer=writer, index=False, sheet_name="学生信息")
+    writer.close()
+    excel_content = buffer.getvalue()
+    base64_content = base64.b64encode(excel_content).decode("utf-8")
+
+    return jsonify(status="ok", data={"file": base64_content})
+
+
+@manage_bp.route("/admin/download_log", methods=["POST"])
+@jwt_required(fresh=True)
+@admin_required
+def download_log():
+    import base64
+    from io import BytesIO
+
+    import html2text
+    import pandas as pd
+
+    from models import db
+    from models.log import Log
+    from models.student import Student
+
+    start_time = request.get_json()["start_time"]
+    end_time = request.get_json()["end_time"]
+
+    logs = db.session.query(Log, Student)
+    logs = logs.join(Student, Student.id == Log.student)
+    logs = logs.filter(Log.indate >= start_time)
+    logs = logs.filter(Log.indate <= end_time)
+    logs = logs.order_by(Log.indate.asc())
+    logs = logs.all()
+
+    data = {"id": [], "name": [], "cls": [], "content": [], "user": [], "indate": []}
+    for log in logs:
+        log, student = log
+        data["id"].append(student.id)
+        data["name"].append(student.name)
+        data["cls"].append(student.cls)
+        data["content"].append(html2text.html2text(log.content))
+        data["user"].append(log.user)
+        data["indate"].append(log.indate)
+
+    df = pd.DataFrame(data)
+    df.columns = ["学号", "姓名", "班级", "谈话内容", "操作人", "谈话时间"]
+
+    buffer = BytesIO()
+    writer = pd.ExcelWriter(buffer, engine="openpyxl")
+    df.to_excel(excel_writer=writer, index=False, sheet_name="谈话记录")
     writer.close()
     excel_content = buffer.getvalue()
     base64_content = base64.b64encode(excel_content).decode("utf-8")

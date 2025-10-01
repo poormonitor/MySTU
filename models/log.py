@@ -9,7 +9,7 @@ class Log(db.Model):
     student = db.Column(db.String(32), index=True)
     title = db.Column(db.String(64))
     content = db.Column(db.Text)
-    indate = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    indate = db.Column(db.DateTime)
     user = db.Column(db.String(32))
 
     def __repr__(self):
@@ -20,6 +20,7 @@ class Log(db.Model):
         self.content = content
         self.user = user
         self.student = student
+        self.indate = datetime.now(timezone.utc)
 
     def to_dict(self):
         return {c.name: getattr(self, c.name, None) for c in self.__table__.columns}

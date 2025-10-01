@@ -62,6 +62,11 @@ watch(currentClass, getStudents);
 
 <template>
     <p class="text-3xl font-bold px-10 pt-10">删除信息</p>
+    <div class="my-5 px-10">
+        <p>删除指定班级全部学生的信息。</p>
+        <p class="text-red-500">谨慎操作！</p>
+    </div>
+
     <div class="mt-8 p-8 flex flex-col items-center">
         <t-form>
             <t-form-item label="班级" name="class">

@@ -11,6 +11,7 @@ class Record(db.Model):
     attendance = db.Column(db.Text, default="[]")
     award = db.Column(db.Text, default="[]")
     warning = db.Column(db.Text, default="[]")
+    activity = db.Column(db.Text, default="[]")
     last_update = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
     def __repr__(self):
