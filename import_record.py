@@ -32,7 +32,7 @@ elif "奖惩原因" in df.columns:
 elif "提醒" in df.columns:
     typ = 4
     default = "[]"
-elif "活动内容" in df.columns:
+elif "活动名称" in df.columns:
     typ = 5
     default = "[]"
 else:
@@ -65,13 +65,13 @@ with app.app_context():
                 record.last_update = datetime.now(timezone.utc)
                 db.session.commit()
 
-        case 1 | 2 | 3 | 4:
+        case 1 | 2 | 3 | 4 | 5:
             cols = {
                 1: ["课程名称", "学分", "成绩", "课程性质"],
                 2: ["时间", "内容", "学时"],
                 3: ["奖惩原因", "奖惩级别", "奖惩时间"],
                 4: ["提醒"],
-                5: ["活动内容", "活动时数", "活动日期"]
+                5: ["活动名称", "活动时数", "活动日期"]
             }
 
             attr = {
