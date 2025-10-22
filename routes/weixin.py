@@ -236,8 +236,8 @@ def weixin_add():
     attach = sid
     role = 1
 
-    weixin = Weixin.query.filter_by(attach=attach, role=role).first()
-    if weixin:
+    weixin = Weixin.query.filter_by(attach=attach, role=role).count()
+    if weixin >= 2:
         return redirect(f"/#/wx/error?error=7")
 
     student = Student.query.filter_by(id=sid).first()
