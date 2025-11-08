@@ -19,6 +19,7 @@ info = {
     "fcontact2phone": "家庭联系人2电话",
     "residence": "居住地",
     "memo": "备注",
+    "comment": "说明",
 }
 
 

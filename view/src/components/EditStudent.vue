@@ -32,6 +32,7 @@ const infoMap = {
     "fcontact2phone": "家庭联系人2电话",
     "residence": "居住地",
     "domicile": "户籍所在地",
+    "comment": "说明",
 }
 
 const fetchStudentInfo = (student) => {

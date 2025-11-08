@@ -22,6 +22,7 @@ class Student(db.Model):
     fcontact1phone = db.Column(db.String(16))
     fcontact2 = db.Column(db.String(8))
     fcontact2phone = db.Column(db.String(16))
+    comment = db.Column(db.Text)
     memo = db.Column(db.Text)
     memoupdate = db.Column(db.DateTime, default=None)
 
@@ -50,6 +51,7 @@ class Student(db.Model):
             self.fcontact2phone,
             self.residence,
             self.memo,
+            self.comment
         ) = args
 
     def to_dict(self):

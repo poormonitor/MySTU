@@ -18,21 +18,28 @@ df.columns = df.columns.map(lambda x: x.replace("*", ""))
 df = df.drop_duplicates(subset=["学号"])
 df = df.applymap(lambda x: x if str(x) != "nan" else "")
 df = df.applymap(lambda x: x.replace(" ", "") if isinstance(x, str) else x)
-df["居住地"] = df["居住地"].apply(lambda x: x.replace(",", ""))
-df["性别"] = df["性别"].apply(lambda x: 0 if x == "男" else 1)
+df["学号"] = df["学号"].apply(lambda x: x.strip())
+
+if "居住地" in df.columns:
+    df["居住地"] = df["居住地"].apply(lambda x: x.replace(",", ""))
+if "性别" in df.columns:
+    df["性别"] = df["性别"].apply(lambda x: 0 if x == "男" else 1)
 
 with app.app_context():
     from models import db
     from models.student import Student
 
     for i in df.to_dict(orient="records"):
-        detail = [i.get(j, "") for j in info.values()]
-        id = detail[0]
+        id = i.get("学号", None)
+        if not id:
+            continue
 
         if Student.query.filter_by(id=id).first():
             stu = Student.query.filter_by(id=id)
-            stu.update({k: v for k, v in zip(info.values(), detail)})
+            update_dict = {k: i[v] for k, v in info.items() if v in i}
+            stu.update(update_dict)
         else:
+            detail = [i.get(info[k], "") for k in info]
             db.session.add(Student(*detail))
 
         db.session.commit()

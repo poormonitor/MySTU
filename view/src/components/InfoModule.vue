@@ -63,9 +63,12 @@ const infoMap = {
         residence: "居住地",
         domicile: "户籍所在地",
     },
+    其他情况: {
+        comment: "说明",
+    },
 };
 
-const largeItem = ["email", "residence"];
+const largeItem = ["email", "residence", "comment"];
 const mediumItem = ["domicile"];
 
 const editorRef = shallowRef();
@@ -94,6 +97,12 @@ const submitMemo = () => {
             }
         });
 };
+
+const hasContent = (k) => {
+    for (let e of Object.keys(infoMap[k]))
+        if (studentInfo.value[e]) return true;
+    return false;
+};
 </script>
 
 <template>
@@ -109,21 +118,27 @@ const submitMemo = () => {
                 class="px-10 py-8 col-span-5 md:col-span-3 infoTab overflow-y-auto"
             >
                 <div class="mb-7" v-for="k in Object.keys(infoMap)">
-                    <p class="font-semibold text-xl mb-2">{{ k }}</p>
-                    <div
-                        class="grid grid-cols-2 lg:grid-cols-5 gap-x-4 gap-y-4"
-                    >
+                    <div v-if="hasContent(k)">
+                        <p class="font-semibold text-xl mb-2">{{ k }}</p>
                         <div
-                            v-for="e in Object.keys(infoMap[k])"
-                            :class="{
-                                'md:col-span-3': largeItem.includes(e),
-                                'md:col-span-2': mediumItem.includes(e),
-                            }"
+                            class="grid grid-cols-2 lg:grid-cols-5 gap-x-4 gap-y-4"
                         >
-                            <p v-if="studentInfo[e]">{{ infoMap[k][e] }}</p>
-                            <p class="text-lg break-words leading-tight">
-                                {{ studentInfo[e] }}
-                            </p>
+                            <div
+                                v-for="e in Object.keys(infoMap[k])"
+                                :class="{
+                                    'md:col-span-3': largeItem.includes(e),
+                                    'md:col-span-2': mediumItem.includes(e),
+                                }"
+                            >
+                                <div v-if="studentInfo[e]">
+                                    <p class="mb-0.5">{{ infoMap[k][e] }}</p>
+                                    <p
+                                        class="text-lg break-words leading-tight"
+                                    >
+                                        {{ studentInfo[e] }}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
